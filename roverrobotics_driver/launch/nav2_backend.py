@@ -56,6 +56,10 @@ def generate_launch_description():
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]
 
+    remappings_controller = [('/tf', 'tf'),
+                  ('/tf_static', 'tf_static'),
+                  ('/cmd_ve', 'cmd_vel_nav2')]
+
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
@@ -116,7 +120,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                remappings=remappings_controller),
             Node(
                 package='nav2_smoother',
                 executable='smoother_server',
