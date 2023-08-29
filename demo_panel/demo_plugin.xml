@@ -1,0 +1,11 @@
+<library path="demo_panel" >
+  <class 
+    name="demo_panel/DemoPanel"
+    type="demo_panel::DemoPanel" 
+    base_class_type="rviz_common::Panel" 
+  >
+    <description>
+      Point Cloud Resolution Control
+    </description>
+  </class>
+</library>

@@ -1,0 +1,3 @@
+/home/tal/ros2_ws/src/install/demo_panel/lib/libdemo_panel.so
+/home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelExport.cmake
+/home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelExport-noconfig.cmake

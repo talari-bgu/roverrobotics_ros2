@@ -1,0 +1,74 @@
+[0.029s] Invoking command in '/home/tal/ros2_ws/src/build/switch_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/switch_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/switch_control
+[0.104s] -- The C compiler identification is GNU 11.4.0
+[0.211s] -- The CXX compiler identification is GNU 11.4.0
+[0.226s] -- Detecting C compiler ABI info
+[0.334s] -- Detecting C compiler ABI info - done
+[0.352s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.353s] -- Detecting C compile features
+[0.354s] -- Detecting C compile features - done
+[0.360s] -- Detecting CXX compiler ABI info
+[0.498s] -- Detecting CXX compiler ABI info - done
+[0.512s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.512s] -- Detecting CXX compile features
+[0.513s] -- Detecting CXX compile features - done
+[0.519s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.835s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.944s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.019s] -- Found rclcpp: 16.0.5 (/opt/ros/humble/share/rclcpp/cmake)
+[1.129s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.160s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.165s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.202s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.256s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.430s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.438s] -- Found rmw_fastrtps_cpp: 6.2.3 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.645s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[1.706s] -- Found FastRTPS: /opt/ros/humble/include  
+[1.809s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.825s] -- Looking for pthread.h
+[1.962s] -- Looking for pthread.h - found
+[1.963s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[2.092s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[2.095s] -- Found Threads: TRUE  
+[2.495s] -- Found geometry_msgs: 4.2.3 (/opt/ros/humble/share/geometry_msgs/cmake)
+[2.607s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.764s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.765s] -- Configured cppcheck include dirs: 
+[2.765s] -- Configured cppcheck exclude dirs and/or files: 
+[2.766s] -- Added test 'flake8' to check Python code syntax and style conventions
+[2.768s] -- Added test 'lint_cmake' to check CMake code style
+[2.769s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[2.772s] -- Added test 'uncrustify' to check C / C++ code style
+[2.772s] -- Configured uncrustify additional arguments: 
+[2.773s] -- Added test 'xmllint' to check XML markup files
+[2.777s] -- Configuring done
+[2.798s] -- Generating done
+[2.802s] -- Build files have been written to: /home/tal/ros2_ws/src/build/switch_control
+[2.820s] Invoked command in '/home/tal/ros2_ws/src/build/switch_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/switch_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/switch_control
+[2.822s] Invoking command in '/home/tal/ros2_ws/src/build/switch_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/switch_control -- -j8 -l8
+[2.931s] [ 50%] [32mBuilding CXX object CMakeFiles/cmd_vel_muxer.dir/src/cmd_vel_muxer.cpp.o[0m
+[20.211s] [100%] [32m[1mLinking CXX executable cmd_vel_muxer[0m
+[20.938s] [100%] Built target cmd_vel_muxer
+[20.951s] Invoked command in '/home/tal/ros2_ws/src/build/switch_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/switch_control -- -j8 -l8
+[20.986s] Invoking command in '/home/tal/ros2_ws/src/build/switch_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/switch_control
+[20.996s] -- Install configuration: ""
+[20.996s] -- Execute custom install script
+[20.997s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/lib/switch_control/cmd_vel_muxer
+[21.009s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control//launch/gazebo_nav2_switch_launch.py
+[21.019s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control//launch/switch_control_launch.py
+[21.030s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/ament_index/resource_index/package_run_dependencies/switch_control
+[21.040s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/ament_index/resource_index/parent_prefix_path/switch_control
+[21.051s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/environment/ament_prefix_path.sh
+[21.061s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/environment/ament_prefix_path.dsv
+[21.072s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/environment/path.sh
+[21.083s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/environment/path.dsv
+[21.093s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/local_setup.bash
+[21.104s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/local_setup.sh
+[21.114s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/local_setup.zsh
+[21.125s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/local_setup.dsv
+[21.136s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/package.dsv
+[21.146s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/ament_index/resource_index/packages/switch_control
+[21.157s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/cmake/switch_controlConfig.cmake
+[21.167s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/cmake/switch_controlConfig-version.cmake
+[21.179s] -- Symlinking: /home/tal/ros2_ws/src/install/switch_control/share/switch_control/package.xml
+[21.196s] Invoked command in '/home/tal/ros2_ws/src/build/switch_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/switch_control

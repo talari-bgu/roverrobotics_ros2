@@ -1,0 +1,133 @@
+[0.043s] Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/demo_panel -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/demo_panel
+[0.144s] -- The C compiler identification is GNU 11.4.0
+[0.225s] -- The CXX compiler identification is GNU 11.4.0
+[0.236s] -- Detecting C compiler ABI info
+[0.347s] -- Detecting C compiler ABI info - done
+[0.359s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.359s] -- Detecting C compile features
+[0.360s] -- Detecting C compile features - done
+[0.366s] -- Detecting CXX compiler ABI info
+[0.498s] -- Detecting CXX compiler ABI info - done
+[0.518s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.519s] -- Detecting CXX compile features
+[0.520s] -- Detecting CXX compile features - done
+[0.527s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.833s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.959s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[1.037s] -- Found rclcpp: 16.0.5 (/opt/ros/humble/share/rclcpp/cmake)
+[1.147s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[1.162s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[1.188s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[1.222s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.272s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.453s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.461s] -- Found rmw_fastrtps_cpp: 6.2.3 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.666s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[1.707s] -- Found FastRTPS: /opt/ros/humble/include  
+[1.771s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.789s] -- Looking for pthread.h
+[1.894s] -- Looking for pthread.h - found
+[1.895s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[2.032s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[2.034s] -- Found Threads: TRUE  
+[2.398s] -- Found class_loader: 2.2.0 (/opt/ros/humble/share/class_loader/cmake)
+[2.418s] -- Found pluginlib: 5.1.0 (/opt/ros/humble/share/pluginlib/cmake)
+[2.482s] -- Found rviz2: 11.2.7 (/opt/ros/humble/share/rviz2/cmake)
+[2.486s] -- Found rviz_common: 11.2.7 (/opt/ros/humble/share/rviz_common/cmake)
+[2.518s] -- Setting OGRE_DIR to: '/opt/ros/humble/share/rviz_ogre_vendor/cmake/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake'
+[2.521s] -- Found OGRE
+[2.521s] --   static     : OFF
+[2.521s] --   components : HLMS;MeshLodGenerator;Overlay;Paging;Property;RTShaderSystem;Terrain;Volume
+[2.521s] --   plugins    : Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[2.521s] --   media      : /opt/ros/humble/opt/rviz_ogre_vendor/share/OGRE/Media
+[2.521s] -- OGRE_LIBRARIES: OgreHLMS;OgreMeshLodGenerator;OgreOverlay;OgrePaging;OgreProperty;OgreRTShaderSystem;OgreTerrain;OgreVolume;OgreMain
+[2.521s] -- OGRE_LIBRARY_DIRS: /opt/ros/humble/opt/rviz_ogre_vendor/lib
+[2.521s] -- OGRE_PLUGINS: Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[2.522s] -- OGRE_PLUGIN_DIR: /opt/ros/humble/opt/rviz_ogre_vendor/lib/OGRE
+[2.522s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[2.522s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[2.522s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[2.522s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[2.567s] -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+[2.578s] -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   
+[2.774s] -- Found X11: /usr/include   
+[2.774s] -- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so
+[2.890s] -- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so - found
+[2.895s] -- Looking for gethostbyname
+[3.058s] -- Looking for gethostbyname - found
+[3.059s] -- Looking for connect
+[3.207s] -- Looking for connect - found
+[3.207s] -- Looking for remove
+[3.347s] -- Looking for remove - found
+[3.347s] -- Looking for shmat
+[3.477s] -- Looking for shmat - found
+[3.478s] -- Looking for IceConnectionNumber in ICE
+[3.605s] -- Looking for IceConnectionNumber in ICE - found
+[3.609s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_RELEASE: _render_system_gl_static_library_abs-NOTFOUND
+[3.609s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_DEBUG: _render_system_gl_static_library_abs-NOTFOUND
+[3.781s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[4.488s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[4.489s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[5.841s] -- Found rviz_default_plugins: 11.2.7 (/opt/ros/humble/share/rviz_default_plugins/cmake)
+[7.288s] -- Generate header for ui with rviz2_QT_VERSION: 
+[7.302s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[7.461s] -- Added test 'copyright' to check source files copyright and LICENSE
+[7.464s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[7.464s] -- Configured cppcheck include dirs: /home/tal/ros2_ws/src/demo_panel/include
+[7.464s] -- Configured cppcheck exclude dirs and/or files: 
+[7.466s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[7.467s] -- Configured cpplint exclude dirs and/or files: 
+[7.468s] -- Added test 'lint_cmake' to check CMake code style
+[7.470s] -- Added test 'uncrustify' to check C / C++ code style
+[7.471s] -- Configured uncrustify additional arguments: 
+[7.472s] -- Added test 'xmllint' to check XML markup files
+[7.480s] -- Configuring done
+[7.544s] -- Generating done
+[7.549s] -- Build files have been written to: /home/tal/ros2_ws/src/build/demo_panel
+[7.573s] Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/demo_panel -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/demo_panel
+[7.575s] Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/demo_panel -- -j8 -l8
+[7.641s] [ 11%] [34m[1mAutomatic MOC for target demo_panel[0m
+[7.681s] [ 11%] Built target demo_panel_autogen
+[7.694s] [ 22%] [34m[1mGenerating include/demo_panel/moc_demo_widget.cpp[0m
+[7.699s] [ 33%] [34m[1mGenerating include/demo_panel/moc_demo_panel.cpp[0m
+[7.732s] [ 44%] [32mBuilding CXX object CMakeFiles/demo_panel.dir/src/demo_panel.cpp.o[0m
+[7.732s] [ 55%] [32mBuilding CXX object CMakeFiles/demo_panel.dir/demo_panel_autogen/mocs_compilation.cpp.o[0m
+[7.733s] [ 77%] [32mBuilding CXX object CMakeFiles/demo_panel.dir/include/demo_panel/moc_demo_panel.cpp.o[0m
+[7.734s] [ 77%] [32mBuilding CXX object CMakeFiles/demo_panel.dir/include/demo_panel/moc_demo_widget.cpp.o[0m
+[7.735s] [ 88%] [32mBuilding CXX object CMakeFiles/demo_panel.dir/src/demo_widget.cpp.o[0m
+[15.365s] [100%] [32m[1mLinking CXX shared library libdemo_panel.so[0m
+[17.147s] [100%] Built target demo_panel
+[17.162s] Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/demo_panel -- -j8 -l8
+[17.216s] Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/demo_panel
+[17.227s] -- Install configuration: ""
+[17.227s] -- Execute custom install script
+[17.228s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel//demo_plugin.xml
+[17.240s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/include/demo_panel/demo_panel.h
+[17.251s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/include/demo_panel/demo_widget.h
+[17.262s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/library_path.sh
+[17.273s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/library_path.dsv
+[17.284s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/ament_index/resource_index/package_run_dependencies/demo_panel
+[17.296s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/ament_index/resource_index/parent_prefix_path/demo_panel
+[17.308s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/ament_prefix_path.sh
+[17.319s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/ament_prefix_path.dsv
+[17.330s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/path.sh
+[17.341s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/environment/path.dsv
+[17.352s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/local_setup.bash
+[17.363s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/local_setup.sh
+[17.374s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/local_setup.zsh
+[17.385s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/local_setup.dsv
+[17.396s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/package.dsv
+[17.407s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/ament_index/resource_index/packages/demo_panel
+[17.420s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/ament_index/resource_index/rviz_common__pluginlib__plugin/demo_panel
+[17.432s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/ament_cmake_export_include_directories-extras.cmake
+[17.444s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/ament_cmake_export_libraries-extras.cmake
+[17.455s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/ament_cmake_export_targets-extras.cmake
+[17.469s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/ament_cmake_export_dependencies-extras.cmake
+[17.482s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelConfig.cmake
+[17.495s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelConfig-version.cmake
+[17.507s] -- Symlinking: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/package.xml
+[17.518s] -- Installing: /home/tal/ros2_ws/src/install/demo_panel/lib/libdemo_panel.so
+[17.521s] -- Set runtime path of "/home/tal/ros2_ws/src/install/demo_panel/lib/libdemo_panel.so" to ""
+[17.521s] -- Installing: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelExport.cmake
+[17.521s] -- Installing: /home/tal/ros2_ws/src/install/demo_panel/share/demo_panel/cmake/demo_panelExport-noconfig.cmake
+[17.526s] Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/demo_panel

@@ -1,0 +1,1 @@
+/home/tal/ros2_ws/src/switch_control/launch/gazebo_nav2_switch_launch.py

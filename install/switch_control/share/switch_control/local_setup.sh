@@ -1,0 +1,1 @@
+/home/tal/ros2_ws/src/build/switch_control/ament_cmake_environment_hooks/local_setup.sh

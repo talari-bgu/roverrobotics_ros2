@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+d121c39415bd0bb1cb936b86a257b505 CMakeFiles/switch_control_uninstall
