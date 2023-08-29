@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/build/switch_control/ament_cmake_core/switch_controlConfig-version.cmake

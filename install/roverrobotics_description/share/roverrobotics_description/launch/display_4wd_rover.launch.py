@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/roverrobotics_description/launch/display_4wd_rover.launch.py

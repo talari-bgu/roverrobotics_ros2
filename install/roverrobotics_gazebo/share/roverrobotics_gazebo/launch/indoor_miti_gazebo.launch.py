@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/roverrobotics_gazebo/launch/indoor_miti_gazebo.launch.py

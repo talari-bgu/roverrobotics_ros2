@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/roverrobotics_driver/launch/indoor_miti_teleop.launch.py

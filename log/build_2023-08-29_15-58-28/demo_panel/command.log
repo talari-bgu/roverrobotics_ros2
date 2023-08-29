@@ -1,6 +1,0 @@
-Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/demo_panel -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/demo_panel
-Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/tal/ros2_ws/src/demo_panel -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/tal/ros2_ws/src/install/demo_panel
-Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/demo_panel -- -j8 -l8
-Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/tal/ros2_ws/src/build/demo_panel -- -j8 -l8
-Invoking command in '/home/tal/ros2_ws/src/build/demo_panel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/demo_panel
-Invoked command in '/home/tal/ros2_ws/src/build/demo_panel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/tal/ros2_ws/src/build/demo_panel

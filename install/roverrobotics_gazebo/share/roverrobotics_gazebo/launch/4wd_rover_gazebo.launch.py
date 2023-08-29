@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/roverrobotics_gazebo/launch/4wd_rover_gazebo.launch.py

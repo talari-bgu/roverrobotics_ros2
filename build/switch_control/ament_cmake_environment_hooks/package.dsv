@@ -1,4 +1,0 @@
-source;share/switch_control/local_setup.bash
-source;share/switch_control/local_setup.dsv
-source;share/switch_control/local_setup.sh
-source;share/switch_control/local_setup.zsh

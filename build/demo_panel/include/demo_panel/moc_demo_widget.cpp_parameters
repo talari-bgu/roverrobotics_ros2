@@ -1,6 +1,0 @@
--I/home/tal/ros2_ws/src/demo_panel/include
--I/home/tal/ros2_ws/src/demo_panel
--I/home/tal/ros2_ws/src/build/demo_panel
--o
-/home/tal/ros2_ws/src/build/demo_panel/include/demo_panel/moc_demo_widget.cpp
-/home/tal/ros2_ws/src/demo_panel/include/demo_panel/demo_widget.h

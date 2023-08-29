@@ -1,1 +1,0 @@
-/home/tal/ros2_ws/src/switch_control/launch/switch_control_launch.py
