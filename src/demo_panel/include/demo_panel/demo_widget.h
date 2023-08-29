@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QSlider>
 #include <QLabel>
+#include <QCheckBox>
+
 #include <memory>
 #include <vector>
 
@@ -25,12 +27,20 @@ namespace demo_panel
     
     private slots:
         void onSliderValueChanged(int value);
+        void onCheckboxStateChanged(int state);
     
     private:
         rclcpp::Node::SharedPtr node_;
         rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr publisher_;
+        
         QSlider* modeSlider;
-        QLabel* modeLabel;
+        QLabel* sliderLabel1;
+        QLabel* sliderLabel2;
+        QLabel* sliderLabel3;
+
+        QCheckBox* checkBox;
+
+        QLabel* infoLabel;
     };
 }
 
