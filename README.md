@@ -4,7 +4,7 @@
 * This package is exclusively built for ROS2. It is being tested on Ubuntu 22.04 with ROS2-Humble and on Rover Zero 3.
 ## Prerequisite and Installation
 First, clone this repository and build it using colcon like any other package.
-```
+```bash
 cd ~
 git clone ttps://github.com/talari-bgu/roverrobotics_ros2
 colcon build --symlink-install
@@ -17,7 +17,7 @@ source ~/.bashrc
 
 Next, you would want to install rplidar s2  nd intel realsense d435i packages, since they dont come with the original repository.  
 Install the lidar using:
-```
+```bash
 cd ~/roverrobotics_ros2/src
 git clone -b ros2 https://github.com/Slamtec/rplidar_ros.git
 cd ~/roverrobotics_ros2
@@ -27,7 +27,7 @@ source ~/.bashrc
 ```
 
 Install the camera using:
-```
+```bash
 sudo apt install ros-humble-librealsense2*
 sudo apt install ros-humble-realsense2-*
 ```
@@ -36,4 +36,27 @@ If face any problems with this part please visit https://github.com/IntelRealSen
 
 ## Setup  
 From now on, 'roverrobotics_ros2' is our main directory, and every path will be relative to it unless stated otherwise.
-You need to manually check and activate lidar or/and camera. to do that, open *'accessories.yaml'* which located in *'roverrobotics_driver/config'*
+You need to manually check and activate lidar or/and camera. to do that, open *'accessories.yaml'* which located in *'roverrobotics_driver/config'*. 
+Each of the accessories located there (BNO055 irelevant) has 'active' line. simply change true/false to de/activate the corresponding attachment. Example:
+```yaml
+# RPLidar S2 Settings
+rplidar:
+  ros__parameters:
+    active: false # can be changed to "true"
+    serial_port: "/dev/ttyUSB0" # might cause problem if not set correctly
+    serial_baudrate: 1000000
+    frame_id: "lidar_link"
+```
+
+If for some reason the lidar doesnt get recognized, first thing to check is if the serial port configured correctly. use *'lsusb -t'* to list serial devices and check for the ttyUSBX (X is a number). if the command doesnt show tty ids then 
+you should create udev. google it.
+
+## Usage
+
+ros2 launch roverrobotics_driver zero.launch.py
+
+ros2 launch roverrobotics_driver slam_launch.py
+
+ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=<path_to_map_file>
+
+playstation controller
