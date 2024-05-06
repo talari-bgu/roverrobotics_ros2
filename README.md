@@ -2,6 +2,16 @@
 ## About
 * This repository uses original Roverrobotics repository found in - https://github.com/RoverRobotics/roverrobotics_ros2.
 * This package is exclusively built for ROS2. It is being tested on Ubuntu 22.04 with ROS2-Humble and on Rover Zero 3.
+
+## Robots Specefications and Instructions
+There are two platforms in the lab, numbered 1 and 2. Each of them contains the following:
+* Dell laptop and charger.
+* Docking stations.
+* 2wd and 4wd kits (6 wheel each in total).
+Accessories:
+* rplidar S2
+* 
+
 ## Prerequisite and Installation
 First, clone this repository and build it using colcon like any other package.
 ```bash
