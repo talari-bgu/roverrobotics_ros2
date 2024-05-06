@@ -4,13 +4,21 @@
 * This package is exclusively built for ROS2. It is being tested on Ubuntu 22.04 with ROS2-Humble and on Rover Zero 3.
 
 ## Robots Specefications and Instructions
-There are two platforms in the lab, numbered 1 and 2. Each of them contains the following:
+There are two platforms in the lab, numbered 1 and 2. Each of them contains the following accessories:
 * Dell laptop and charger.
 * Docking stations.
+* PS controller
 * 2wd and 4wd kits (6 wheel each in total).
-Accessories:
-* rplidar S2
-* 
+* Payload
+
+Sensors:
+* Intel realsense d435i
+* Slamtech rplidar S2
+
+There are two options to work on the robots
+### Option 1 - direct connection
+Connect the NUC pc inside of the robot to a monitor using HDMI cable and mouse and keyboard using USB port (you might need an USB hub).  
+If you're planning to work for an extended period of time then it is recommended to place the robot on the docking station for the battery to be charged. Don't leave the platform charge when not in use as lithium batteries wear out if they are being charged all the time.
 
 ## Prerequisite and Installation
 First, clone this repository and build it using colcon like any other package.
