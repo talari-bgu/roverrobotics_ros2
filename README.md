@@ -25,7 +25,8 @@ If you're planning to work for an extended period of time then it is recommended
 First, clone this repository and build it using colcon like any other package.
 ```bash
 cd ~
-git clone ttps://github.com/talari-bgu/roverrobotics_ros2
+git clone https://github.com/talari-bgu/roverrobotics_ros2
+cd ~/roverrobotics_ros2
 colcon build --symlink-install
 echo "source ~/roverrobotics_ros2/install/setup.bash" >> ~/.bashrc
 source ~/.bashrc
