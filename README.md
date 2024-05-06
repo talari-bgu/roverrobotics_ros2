@@ -16,10 +16,15 @@ Sensors:
 * Slamtech rplidar S2
 
 There are two options to work on the robots
-### Option 1 - direct connection
+### Option 1 - SSH remote connection
+_Recommneded option for both developing and operating the robot_
+Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The IPs of the robots' machines in the HRI lab (room 131) are set to static IPs and are 192.168.1.111/2, depending on which robot you're working on.
+
+### Option 2 - direct connection
 _This option is not suitable for moving the robot_
 Connect the NUC pc inside of the robot to a monitor using HDMI cable and mouse and keyboard using USB port (you might need an USB hub).  
 If you're planning to work for an extended period of time then it is recommended to place the robot on the docking station for the battery to be charged. Don't leave the platform charging when not in use, as lithium batteries wear out if they are constantly being charged.
+
 
 ## Prerequisite and Installation
 First, clone this repository and build it using colcon like any other package.
