@@ -17,8 +17,9 @@ Sensors:
 
 There are two options to work on the robots
 ### Option 1 - direct connection
+_This option is not suitable for moving the robot_
 Connect the NUC pc inside of the robot to a monitor using HDMI cable and mouse and keyboard using USB port (you might need an USB hub).  
-If you're planning to work for an extended period of time then it is recommended to place the robot on the docking station for the battery to be charged. Don't leave the platform charge when not in use as lithium batteries wear out if they are being charged all the time.
+If you're planning to work for an extended period of time then it is recommended to place the robot on the docking station for the battery to be charged. Don't leave the platform charging when not in use, as lithium batteries wear out if they are constantly being charged.
 
 ## Prerequisite and Installation
 First, clone this repository and build it using colcon like any other package.
