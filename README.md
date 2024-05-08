@@ -18,7 +18,29 @@ Sensors:
 There are two options to work on the robots
 ### Option 1 - SSH remote connection
 _Recommneded option for both developing and operating the robot_
-Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The IPs of the robots' machines in the HRI lab (room 131) are set to static IPs and are 192.168.1.111/2, depending on which robot you're working on.  
+Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The command is: ssh {_User_}@{_IP_ADDRESS_}. if the command was successful than a new line will appear asking for a password. The default user and password are both rover. The IPs of the robots' machines in the HRI lab (room 131) are set to static IPs and are 192.168.1.111/2, depending on which robot you're working on, for any other wifi network check the ip using _ifconfig_.  
+eg.
+```bash
+ssh rover@132.73.201.116
+rover@132.73.201.116 password:
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-33-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Expanded Security Maintenance for Applications is not enabled.
+
+689 updates can be applied immediately.
+227 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+27 additional security updates can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+Last login: Mon May  6 11:44:20 2024 from 192.168.1.122
+rover@rover-NUC-2:~$
+```
 
 ### Option 2 - direct connection
 _This option is not suitable for moving the robot_
