@@ -18,7 +18,7 @@ Sensors:
 There are two options to work on the robots
 ### Option 1 - SSH remote connection
 _Recommneded option for both developing and operating the robot_
-Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The IPs of the robots' machines in the HRI lab (room 131) are set to static IPs and are 192.168.1.111/2, depending on which robot you're working on.
+Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The IPs of the robots' machines in the HRI lab (room 131) are set to static IPs and are 192.168.1.111/2, depending on which robot you're working on.  
 
 ### Option 2 - direct connection
 _This option is not suitable for moving the robot_
@@ -85,3 +85,12 @@ ros2 launch roverrobotics_driver slam_launch.py
 ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=<path_to_map_file>
 
 playstation controller
+
+
+## Troubleshooting
+
+### Caught exception in launch (see debug for traceback): executable 'joys_manager.py' not found on the libexec directory
+Check if joys_manager.py exists in 'install/roverrobotics_input_manager/lib/roverrobotics_input_manager'.  
+___FIX (file exists?)___:  
+YES - Navigate to the dir using cd, then run the command chmod +x joys_manager.py to make it executable.  
+NO - Problem might causes of the cmakelists file in the package check that its correct.  
