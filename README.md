@@ -14,6 +14,7 @@ There are two platforms in the lab, numbered 1 and 2. Each of them contains the 
 Sensors:
 * Intel realsense d435i
 * Slamtech rplidar S2
+* IMU bno055
 
 There are two options to work on the robots
 ### Option 1 - SSH remote connection
@@ -73,6 +74,15 @@ colcon build --symlink-install
 source ~/.bashrc
 ```
 
+Install the IMU using:
+```bash
+cd ~/roverrobotics_ros2/src
+git clone https://github.com/flynneva/bno055.git
+cd ~/roverrobotics_ros2
+colcon build --symlink-install
+source ~/.bashrc
+```
+
 Install the camera using:
 ```bash
 sudo apt install ros-humble-librealsense2*
@@ -81,9 +91,23 @@ sudo apt install ros-humble-realsense2-*
 First command installs the intel realsense SDK, and second line installs ROS2 wrapper.  
 If face any problems with this part please visit https://github.com/IntelRealSense/realsense-ros.
 
+After installtion you need to setup udev rules.  
+```udev rules let you define a name for specific devices or device types based on attributes like vendor ID, product ID, serial number, or other properties, allowing for consistent device names across reboots and different USB ports.```
+
+```bash
+sudo cp 55-roverrobotics.rules /etc/udev/rules.d/55-roverrobotics.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+Verify that sensor are being detected as defined name in the following list.
+```bash
+ls /dev
+```
+
 ## Setup  
 From now on, 'roverrobotics_ros2' is our main directory, and every path will be relative to it unless stated otherwise.
-You need to manually check and activate lidar or/and camera. to do that, open *'accessories.yaml'* which located in *'roverrobotics_driver/config'*. 
+You need to manually check and activate sensors. to do that, open *'accessories.yaml'* which located in *'roverrobotics_driver/config'*. 
 Each of the accessories located there (BNO055 irelevant) has 'active' line. simply change true/false to de/activate the corresponding attachment. Example:
 ```yaml
 # RPLidar S2 Settings
