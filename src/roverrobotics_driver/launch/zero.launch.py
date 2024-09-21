@@ -12,7 +12,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     rover_path = get_package_share_path('roverrobotics_description')
-    default_model_path = rover_path / 'urdf/rover_4wd.urdf'
+    default_model_path = rover_path / 'urdf/rover_2wd.urdf'
     
     model_arg = DeclareLaunchArgument(name='model', default_value=str(default_model_path),
                                       description='Absolute path to robot urdf file')
