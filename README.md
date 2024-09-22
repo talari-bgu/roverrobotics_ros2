@@ -15,7 +15,7 @@ Sensors:
 * Intel realsense d435i
 * Slamtech rplidar S2
 * IMU bno055
-
+fv
 There are two options to work on the robots
 ### Option 1 - SSH remote connection
 _Recommneded option for both developing and operating the robot_
