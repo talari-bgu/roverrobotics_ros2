@@ -63,7 +63,16 @@ source ~/.bashrc
 * *--synlink-install* - syncs between the directories "src" -> "install". Instead of building each time after modifying the code, files can be changed in the source ("src") space (e.g. Python files or other non-compiled resources) for faster iteration.  
 * *.bashrc* - is a file that runs each time we open a new terminal. To make our environment acknowledge our new workspace named *'roverrobotics_ros2,'* we need to source (i.e., open) the workspace installation file, which is *'install/setup.bash.'* Instead of sourcing it each time, we can save it in the .bashrc file, which will run it automatically for us. Make sure that in the .bashrc file, you only source the workspace once, as more than one instance is irrelevant.
 
-Next, you would want to install rplidar s2  nd intel realsense d435i packages, since they dont come with the original repository.  
+The repository already contains rplidar s2  and IMU bno055 packages.  
+Since camera isn't preinstalled, install using: 
+```bash
+sudo apt install ros-humble-librealsense2*
+sudo apt install ros-humble-realsense2-*
+```
+First command installs the intel realsense SDK, and second line installs ROS2 wrapper.  
+If face any problems with this part please visit https://github.com/IntelRealSense/realsense-ros.
+
+If you want to reinstall sensors or update them:
 Install the lidar using:
 ```bash
 cd ~/roverrobotics_ros2/src
@@ -82,14 +91,6 @@ cd ~/roverrobotics_ros2
 colcon build --symlink-install
 source ~/.bashrc
 ```
-
-Install the camera using:
-```bash
-sudo apt install ros-humble-librealsense2*
-sudo apt install ros-humble-realsense2-*
-```
-First command installs the intel realsense SDK, and second line installs ROS2 wrapper.  
-If face any problems with this part please visit https://github.com/IntelRealSense/realsense-ros.
 
 After installtion you need to setup udev rules.  
 ```udev rules let you define a name for specific devices or device types based on attributes like vendor ID, product ID, serial number, or other properties, allowing for consistent device names across reboots and different USB ports.```
