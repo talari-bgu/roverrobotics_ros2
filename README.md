@@ -56,7 +56,7 @@ cd ~
 git clone https://github.com/talari-bgu/roverrobotics_ros2
 cd ~/roverrobotics_ros2
 colcon build --symlink-install
-echo "source ~/roverrobotics_ros2/install/setup.bash" >> ~/.bashrc
+bash installation.sh
 source ~/.bashrc
 ```
 
@@ -119,13 +119,38 @@ you should create udev. google it.
 
 ## Usage
 
+### 1. Command to bringup robot:
+With ps3 joystick:
+```bash
+ros2 launch roverrobotics_driver zero_teleop.launch.py
+```
+Without:
+```bash
 ros2 launch roverrobotics_driver zero.launch.py
+```
 
+### 2. Mapping environment
+First, you bringup the robot, then in a second terminal run:
+```bash
 ros2 launch roverrobotics_driver slam_launch.py
+```
+In a third terminal, run:
+```bash
+rviz2
+```
+On the rviz window open slam config:
+File -> Open config -> slam_rviz_layout.rviz
 
-ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=<path_to_map_file>
+After moving the robot around with the joystick and mapping the environment save the map:
+```bash
 
-playstation controller
+```
+
+### 3. Autonomous navigation using interface:
+
+```bash
+ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=<file_name>
+```
 
 
 ## Troubleshooting
