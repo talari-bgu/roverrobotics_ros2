@@ -56,7 +56,7 @@ cd ~
 git clone https://github.com/talari-bgu/roverrobotics_ros2
 cd ~/roverrobotics_ros2
 colcon build --symlink-install
-echo "source ~/roverrobotics_ros2/install/setup.bash" >> ~/.bashrc
+bash installation.sh
 source ~/.bashrc
 ```
 
@@ -94,12 +94,6 @@ source ~/.bashrc
 
 After installtion you need to setup udev rules.  
 ```udev rules let you define a name for specific devices or device types based on attributes like vendor ID, product ID, serial number, or other properties, allowing for consistent device names across reboots and different USB ports.```
-
-```bash
-sudo cp 55-roverrobotics.rules /etc/udev/rules.d/55-roverrobotics.rules
-sudo udevadm control --reload-rules
-sudo udevadm trigger
-```
 
 Verify that sensor are being detected as defined name in the following list.
 ```bash
