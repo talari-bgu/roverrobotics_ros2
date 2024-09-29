@@ -44,7 +44,7 @@ class RobotDriver : public rclcpp::Node {
   RollingMeanAccumulator linear_accumulator_;
   RollingMeanAccumulator angular_accumulator_;
   const std::string ROBOT_STATUS_TOPIC_DEFAULT_ = "/robot_status";
-  const float ROBOT_STATUS_FREQUENCY_DEFAULT_ = 60.0;
+  const float ROBOT_STATUS_FREQUENCY_DEFAULT_ = 15.0;
   const std::string ROBOT_INFO_REQUEST_TOPIC_DEFAULT_ = "/robot_info/request";
   const std::string ROBOT_INFO_TOPIC_DEFAULT_ = "/robot_info";
   const std::string ROBOT_TYPE_DEFAULT_ = "NONE";
