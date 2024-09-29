@@ -16,7 +16,7 @@ class BoxTestNode(Node):
         self.rotation_vel = 0.5  # Angular velocity (rad/s)
 
         # Set the angle to rotate 
-        self.degrees_to_rotate = 108  # in degrees
+        self.degrees_to_rotate = 109  # in degrees
         self.radians_to_rotate = self.degrees_to_rotate * (3.14159 / 180)
 
         # Calculate duration for forward movement

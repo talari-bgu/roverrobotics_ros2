@@ -8,7 +8,7 @@ rplidar:
     inverted: false
     angle_compensate: true
     scan_mode: "Standard"
-    scan_frequency: 10.0
+    scan_frequency: 15.0
 
 # BNO055 IMU Settings
 bno055:
