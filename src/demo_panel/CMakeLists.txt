@@ -40,15 +40,15 @@ set(CMAKE_AUTOMOC ON)
 
 # Define source file
 set(${PROJECT_NAME}_SRCS
-  src/switch_panel.cpp
-  src/switch_widget.cpp
+  src/demo_panel.cpp
+  src/demo_widget.cpp
   #src/plugin_init.cpp
 )
 
 # Define header file
 set(${PROJECT_NAME}_HDRS
-  include/${PROJECT_NAME}/switch_panel.h
-  include/${PROJECT_NAME}/switch_widget.h
+  include/${PROJECT_NAME}/demo_panel.h
+  include/${PROJECT_NAME}/demo_widget.h
 )
 
 
