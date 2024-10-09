@@ -127,6 +127,7 @@ bt_navigator_navigate_to_pose_rclcpp_node:
 
 controller_server:
   ros__parameters:
+    remappings: ["cmd_vel", "cmd_vel_nav2"]
     use_sim_time: False
     controller_frequency: 30.0
     min_x_velocity_threshold: 0.001
@@ -160,13 +161,24 @@ controller_server:
       time_steps: 56
       model_dt: 0.05
       batch_size: 2000
+      
       vx_std: 0.2
-      vy_std: 0.2
+      vx_max: 0.2
+      vx_min: -0.15
+      ax_max: 0.2
+      ax_min: -0.2
+
       wz_std: 0.4
-      vx_max: 0.5
-      vx_min: -0.35
-      vy_max: 0.5
-      wz_max: 1.9
+      wz_max: 0.75
+      az_max: 0.75
+
+      # No movement is y direction
+      vy_std: 0.0
+      vy_max: 0.0
+      vy_min: 0.0
+      ay_max: 0.0
+      ay_min: 0.0
+
       iteration_count: 1
       prune_distance: 1.7
       transform_tolerance: 0.1
@@ -318,9 +330,9 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: False
-    # Overridden in launch by the "map" launch configuration or provided default value.
-    # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    yaml_filename: "/home/rover/rover_workspace/office_map.yaml"
+    topic_name: "map"
+    frame_id: "map"
+    always_send_full_map: True
 
 map_saver:
   ros__parameters:

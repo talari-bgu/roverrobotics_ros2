@@ -101,8 +101,11 @@ install(
 
 # Install launch file
 install(
-  DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}/
+  DIRECTORY 
+  launch
+  config
+  DESTINATION 
+  share/${PROJECT_NAME}/
 )
 
 install(
