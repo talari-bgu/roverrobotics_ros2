@@ -22,9 +22,9 @@ There are 3 TP-link ax1800 wifi router in each lab (131, 132, 134), which aims t
 
 **IPs:**
 * Precision 1: 192.168.68.52
-* Precision 2:
+* Precision 2: 192.168.68.54
 * NUC 1: 192.168.68.51
-* NUC 2:
+* NUC 2: 192.168.68.53
    
 __   __
 ### There are two options to work on the robots
