@@ -1,8 +1,8 @@
 import rclpy
 from rclpy.node import Node
 from rcl_interfaces.srv import SetParameters
+from rcl_interfaces.msg import ParameterValue, ParameterType
 from rclpy.parameter import Parameter
-from rcl_interfaces.msg import ParameterValue
 import sys
 import termios
 import tty
@@ -10,6 +10,7 @@ import tty
 class InflationRadiusToggler(Node):
     def __init__(self):
         super().__init__('inflation_radius_toggler')
+        # Correct paths for set_parameters services
         self.local_costmap_client = self.create_client(SetParameters, '/local_costmap/local_costmap/set_parameters')
         self.global_costmap_client = self.create_client(SetParameters, '/global_costmap/global_costmap/set_parameters')
         
@@ -26,12 +27,13 @@ class InflationRadiusToggler(Node):
         self.inflation_radius = 0.1 if not self.is_toggled else 0.35
         self.is_toggled = not self.is_toggled
 
-        # Create parameter request for inflation radius
+        # Create the parameter with the correct type and value
         parameter = Parameter(
             name='inflation_layer.inflation_radius',
-            value=ParameterValue(type=Parameter.Type.DOUBLE, double_value=self.inflation_radius)
+            value=ParameterValue(type=ParameterType.PARAMETER_DOUBLE, double_value=self.inflation_radius)
         )
 
+        # Create parameter requests for local and global costmaps
         local_request = SetParameters.Request(parameters=[parameter])
         global_request = SetParameters.Request(parameters=[parameter])
 
