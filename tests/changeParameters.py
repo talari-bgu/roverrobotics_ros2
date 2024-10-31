@@ -1,4 +1,11 @@
+import rclpy
+from rclpy.node import Node
+from rcl_interfaces.srv import SetParameters
+from rclpy.parameter import Parameter
 from rcl_interfaces.msg import ParameterValue
+import sys
+import termios
+import tty
 
 class InflationRadiusToggler(Node):
     def __init__(self):
@@ -39,3 +46,37 @@ class InflationRadiusToggler(Node):
             self.get_logger().info(f"Inflation radius set to {self.inflation_radius}")
         else:
             self.get_logger().error("Failed to update inflation radius.")
+
+def get_key():
+    # Function to capture a single key press
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
+
+def main(args=None):
+    rclpy.init(args=args)
+    toggler = InflationRadiusToggler()
+
+    print("Press 'a' to toggle the inflation_radius between 0.1 and 0.35. Press 'q' to quit.")
+
+    try:
+        while rclpy.ok():
+            key = get_key()
+            if key == 'a':
+                toggler.toggle_inflation_radius()
+            elif key == 'q':
+                print("Exiting...")
+                break
+    except KeyboardInterrupt:
+        print("Interrupted by user.")
+    finally:
+        toggler.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
