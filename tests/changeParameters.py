@@ -10,8 +10,8 @@ import tty
 class InflationRadiusToggler(Node):
     def __init__(self):
         super().__init__('inflation_radius_toggler')
-        self.local_costmap_client = self.create_client(SetParameters, '/local_costmap/set_parameters')
-        self.global_costmap_client = self.create_client(SetParameters, '/global_costmap/set_parameters')
+        self.local_costmap_client = self.create_client(SetParameters, '/local_costmap/local_costmap/set_parameters')
+        self.global_costmap_client = self.create_client(SetParameters, '/global_costmap/global_costmap/set_parameters')
         
         # Initial toggle state
         self.inflation_radius = 0.35
