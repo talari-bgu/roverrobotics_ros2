@@ -10,7 +10,6 @@ import tty
 class InflationRadiusToggler(Node):
     def __init__(self):
         super().__init__('inflation_radius_toggler')
-        # Correct paths for set_parameters services
         self.local_costmap_client = self.create_client(SetParameters, '/local_costmap/local_costmap/set_parameters')
         self.global_costmap_client = self.create_client(SetParameters, '/global_costmap/global_costmap/set_parameters')
         
@@ -30,12 +29,12 @@ class InflationRadiusToggler(Node):
         # Create the parameter with the correct type and value
         parameter = Parameter(
             name='inflation_layer.inflation_radius',
-            value=ParameterValue(type=ParameterType.PARAMETER_DOUBLE, double_value=self.inflation_radius)
+            value=self.inflation_radius
         )
 
         # Create parameter requests for local and global costmaps
-        local_request = SetParameters.Request(parameters=[parameter])
-        global_request = SetParameters.Request(parameters=[parameter])
+        local_request = SetParameters.Request(parameters=[parameter.to_parameter_msg()])
+        global_request = SetParameters.Request(parameters=[parameter.to_parameter_msg()])
 
         # Send requests
         local_future = self.local_costmap_client.call_async(local_request)
