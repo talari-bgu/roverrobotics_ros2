@@ -15,8 +15,12 @@ slam_toolbox:
     mode: localization
 
     # if you'd like to start localizing on bringup in a map and pose
-    # map_file_name: /home/rover/rover_workspace/office_map
-    map_start_pose: [0.0, 0.0, 0.0]
+    # map_start_pose: [0.0, 0.0, 0.0] # Green arrow
+    map_start_pose: [-0.5, 0.0, 0.0] # Docking station in lab -131
+    # map_start_pose: [14.86, -0.1, 0.0] # Roni's experiment start in lab -134
+    
+
+
 
     debug_logging: false
     throttle_scans: 1

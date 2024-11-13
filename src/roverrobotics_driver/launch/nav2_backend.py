@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -39,6 +38,8 @@ def generate_launch_description():
     container_name_full = (namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
+    remappings = LaunchConfiguration('remappings')
+
 
     lifecycle_nodes = ['controller_server',
                        'smoother_server',
@@ -53,11 +54,13 @@ def generate_launch_description():
     # https://github.com/ros/robot_state_publisher/pull/30
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
+
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]    
     # remappings = [('/tf', 'tf'),
     #               ('/tf_static', 'tf_static'),
     #               ('/cmd_vel', '/cmd_vel_nav2')]
+
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
@@ -107,6 +110,7 @@ def generate_launch_description():
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
         description='log level')
+
 
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
@@ -247,6 +251,7 @@ def generate_launch_description():
     ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
+
     # Add the actions to launch all of the navigation nodes
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)

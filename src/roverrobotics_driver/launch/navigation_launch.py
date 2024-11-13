@@ -126,7 +126,7 @@ def generate_launch_description():
     
     declare_slam_map_file_cmd = DeclareLaunchArgument(
         'map_file_name',
-        default_value='labs',
+        default_value='labs_2',
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
     
     map_file_arg = PathJoinSubstitution([

@@ -129,13 +129,14 @@ controller_server:
   ros__parameters:
     remappings: ["cmd_vel", "cmd_vel_nav2"]
     use_sim_time: False
-    controller_frequency: 30.0
+    controller_frequency: 10.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.01
     failure_tolerance: 0.3
     progress_checker_plugin: "progress_checker"
-    goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+    goal_checker_plugins: ["precise_goal_checker"] # "precise_goal_checker"
+    # goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
     controller_plugins: ["FollowPath"]
     odom_topic: "odometry/filtered"
 
@@ -145,32 +146,32 @@ controller_server:
       required_movement_radius: 0.5
       movement_time_allowance: 10.0
     # Goal checker parameters
-    #precise_goal_checker:
-    #  plugin: "nav2_controller::SimpleGoalChecker"
-    #  xy_goal_tolerance: 0.25
-    #  yaw_goal_tolerance: 0.25
-    #  stateful: True
-    general_goal_checker:
-      stateful: True
-      plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.5
-      yaw_goal_tolerance: 0.5
+    precise_goal_checker:
+     plugin: "nav2_controller::SimpleGoalChecker"
+     xy_goal_tolerance: 0.2
+     yaw_goal_tolerance: 0.2
+     stateful: True
+    # general_goal_checker:
+    #   stateful: True
+    #   plugin: "nav2_controller::SimpleGoalChecker"
+    #   xy_goal_tolerance: 0.5
+    #   yaw_goal_tolerance: 0.5
     # DWB parameters
     FollowPath:
       plugin: "nav2_mppi_controller::MPPIController"
       time_steps: 56
-      model_dt: 0.05
+      model_dt: 0.1
       batch_size: 2000
       
       vx_std: 0.2
-      vx_max: 0.2
+      vx_max: 0.3
       vx_min: -0.15
       ax_max: 0.2
       ax_min: -0.2
 
       wz_std: 0.4
-      wz_max: 0.75
-      az_max: 0.75
+      wz_max: 0.4
+      az_max: 0.4
 
       # No movement is y direction
       vy_std: 0.0
@@ -210,7 +211,7 @@ controller_server:
       PreferForwardCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 15.0
         threshold_to_consider: 0.5
       ObstaclesCritic:
         enabled: true
@@ -241,7 +242,7 @@ controller_server:
       PathAngleCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 2.0
+        cost_weight: 6.0
         offset_from_furthest: 4
         threshold_to_consider: 0.5
         max_angle_to_furthest: 1.0
