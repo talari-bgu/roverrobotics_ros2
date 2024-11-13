@@ -15,5 +15,5 @@ joy_manager:
       z: 0
     angular:
       x: 0
-      y: RIGHT_JOY_VERT
+      y: 0
       z: RIGHT_JOY_HORIZ

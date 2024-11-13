@@ -11,19 +11,37 @@ There are two platforms in the lab, numbered 1 and 2. Each of them contains the 
 * 2wd and 4wd kits (6 wheel each in total).
 * Payload
 
-Sensors:
+**Sensors:**
 * Intel realsense d435i
 * Slamtech rplidar S2
 * IMU bno055
 
-There are two options to work on the robots
+### Wifi Network: Rover_network
+There are 3 TP-link ax1800 wifi router in each lab (131, 132, 134), which aims to deploy a network that allows navigation in all of those labs.  
+**Wifi password:** rover_hri
+
+**IPs:**
+* Precision 1: 192.168.68.52
+* Precision 2: 192.168.68.54
+* NUC 1: 192.168.68.51
+* NUC 2: 192.168.68.53
+   
+__   __
+### There are two options to work on the robots
 ### Option 1 - SSH remote connection
 _Recommneded option for both developing and operating the robot_
-Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. The command is: ssh {_User_}@{_IP_ADDRESS_}. if the command was successful than a new line will appear asking for a password. The default user and password are both __rover__. To check the IPs of the robot use the command _ifconfig_.  
+
+> You can use either terminal or VSCode SSH extension. My recommendation:  
+> Terminal: When you want to only run ros2 commands link launch, topic list, node info and etc.  
+> VS Code: When yo want to code. You can open files remotely.
+
+
+Make sure that the SSH server and client are installed on the corresponding machines. The NUCs should have the SSH server preinstalled, and the laptops should have the SSH client preinstalled. google it.
+The command is: ssh {_User_}@{_IP_ADDRESS_}. if the command was successful than a new line will appear asking for a password. The default user and password are both __rover__. To check the IPs of the robot use the command _ifconfig_.  
 eg.
 ```bash
-ssh rover@132.73.222.123
-rover@132.73.222.123 password:
+ssh rover@192.168.68.51
+rover@192.168.68.51 password:
 Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-33-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -39,7 +57,7 @@ To see these additional updates run: apt list --upgradable
 27 additional security updates can be applied with ESM Apps.
 Learn more about enabling ESM Apps service at https://ubuntu.com/esm
 
-Last login: Mon May  6 11:44:20 2024 from 192.168.1.122
+Last login: Mon May  6 11:44:20 2024 from 192.168.68.51
 rover@rover-NUC-2:~$
 ```
 
@@ -120,16 +138,28 @@ you should create udev. google it.
 ## Usage
 
 ### 1. Command to bringup robot:
-With ps3 joystick:
+You can move the robot around using ps3 joystick, make sure you use the compatible joystick (same number as robot). also make sure it is charged, and when you turn it on it should blink blue several times and then blue light should stay on, meaning connection was complete. The connection is via bluetooth so you'll need to stay within bluetooth distance.
+
+With ps3 joystick: Run on NUC
 ```bash
 ros2 launch roverrobotics_driver zero_teleop.launch.py
 ```
-Without:
+
+The following command is meant for next steps, when you dont need the ps3 for teleoperation.
+Even if the ps3 joystick indicator is blue it wont move the robot.
+Without ps3 joystick: Run on NUC
 ```bash
 ros2 launch roverrobotics_driver zero.launch.py
 ```
 
-### 2. Mapping environment
+You can also use a different joystick or keyboard using ros2 package teleop_twist
+For instance if you want to use EXTREME 3d pro by Logitech we have in the lab use:
+X3D joystick: Run on Laptop
+```bash
+ros2 launch teleop_twist_joy teleop-launch.py joy_config:=xd3
+```
+
+### 2. Mapping environment - SSH Connection required
 First, you bringup the robot, then in a second terminal run:
 ```bash
 ros2 launch roverrobotics_driver slam_launch.py
@@ -147,6 +177,11 @@ After moving the robot around with the joystick and mapping the environment save
 ```
 
 ### 3. Autonomous navigation using interface:
+You can use the existing map that i've created 
+
+```bash
+ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=labs
+```
 
 ```bash
 ros2 launch roverrobotics_driver navigation_launch.py map_file_name:=<file_name>

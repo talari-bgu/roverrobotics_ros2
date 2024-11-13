@@ -1,0 +1,11 @@
+<library path="switch_control" >
+  <class 
+    name="switch_panel/SwitchPanel"
+    type="switch_panel::SwitchPanel" 
+    base_class_type="rviz_common::Panel" 
+  >
+    <description>
+      Point Cloud Resolution Control
+    </description>
+  </class>
+</library>

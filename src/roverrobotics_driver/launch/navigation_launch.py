@@ -66,7 +66,7 @@ def generate_launch_description():
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='false',
         description='Use simulation (Gazebo) clock if true')
 
     declare_params_file_cmd = DeclareLaunchArgument(
@@ -126,7 +126,7 @@ def generate_launch_description():
     
     declare_slam_map_file_cmd = DeclareLaunchArgument(
         'map_file_name',
-        default_value='maze_map',
+        default_value='labs_2',
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
     
     map_file_arg = PathJoinSubstitution([
