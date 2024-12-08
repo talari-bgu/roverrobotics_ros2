@@ -48,18 +48,6 @@ def generate_launch_description():
         
         # Add BNO055 IMU to launch description
         ld.add_action(bno055_node)
-
-    # Realsense Node
-    if accessories_config.get('realsense', {}).get('ros__parameters', {}).get('active', False):
-        realsense_node = Node(
-            package='realsense2_camera',
-            name="realsense",
-            executable='realsense2_camera_node',
-            parameters=[accessories_config_path],
-            output='screen')
-
-        # Add Realsense d435i to launch description
-        ld.add_action(realsense_node)
-
+    
     return ld
 

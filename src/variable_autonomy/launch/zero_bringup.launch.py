@@ -9,7 +9,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     roverrobotics_driver_dir = get_package_share_directory('roverrobotics_driver')
-    topic_config = Path(get_package_share_directory('switch_control'), 'config', 'ps4_joystick.yaml')
+    topic_config = Path(get_package_share_directory('variable_autonomy'), 'config', 'ps4_joystick.yaml')
     
     # Put the name of the map in map directory
     map_file_name = 'lab131_2' 
@@ -24,11 +24,11 @@ def generate_launch_description():
         ),
 
         # Controller - Joystick
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [roverrobotics_driver_dir, '/launch/ps4_controller.launch.py']),
-            launch_arguments={'topics_config': str(topic_config)}.items()
-        ),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [roverrobotics_driver_dir, '/launch/ps4_controller.launch.py']),
+        #     launch_arguments={'topics_config': str(topic_config)}.items()
+        # ),
 
         # Navigation
         # IncludeLaunchDescription(
@@ -40,9 +40,9 @@ def generate_launch_description():
 
         # Switch control node
         Node(
-            package='switch_control',
-            executable='cmd_vel_muxer',
-            name='command_controller',
-            output='screen'
+            package="variable_autonomy",  # Replace with your package name
+            executable="command_controller",  # Name from setup.py entry point
+            name="command_controller",  # Node name
+            output="screen",  # Output logs to screen
         ),
     ])

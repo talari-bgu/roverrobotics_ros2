@@ -6,6 +6,7 @@
 # Sensor Udev Rules
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE:="0777", SYMLINK+="rplidar"
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6014", MODE:="0777", SYMLINK+="bno055"
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="1bcf", ATTRS{idProduct}=="2284", MODE:="0777", SYMLINK+="webcam"
 
 # Rover ESC Udev Rules
 KERNEL=="ttyUSB[0-9]", ATTRS{idVendor}=="0403", ATTRS{serial}=="Rover Zero 2", MODE:="0777", SYMLINK+="rover-control", RUN+="/bin/setserial /dev/%k low_latency"

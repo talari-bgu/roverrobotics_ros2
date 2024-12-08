@@ -14,13 +14,13 @@ class NavigateThroughPosesNode(Node):
         self.action_client = ActionClient(self, NavigateThroughPoses, 'navigate_through_poses')
         
         # Center of person relative to map origin
-        x0 = 18.0
+        x0 = 18.00
         y0 = 0.16
 
         # Trajectory rotation in degrees
         rotation = 95
 
-        with open("trajectory_points_flat_ellipse-front-left.json", "r") as file:
+        with open("4b.json", "r") as file:
             data = json.load(file)
 
         self.waypoints = []

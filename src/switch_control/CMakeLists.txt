@@ -9,6 +9,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
@@ -86,10 +87,15 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "RVIZ_DEFAULT_PLUGINS_BUILDIN
 pluginlib_export_plugin_description_file(rviz_common switch_plugin.xml)
 
 # Install the executable
-install(TARGETS cmd_vel_muxer
+# install(TARGETS cmd_vel_muxer
+#   DESTINATION lib/${PROJECT_NAME}
+# )
+
+install(
+  PROGRAMS
+    src/cmd_vel_muxer.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
 install(
   TARGETS ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}

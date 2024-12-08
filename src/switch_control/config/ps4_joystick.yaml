@@ -1,5 +1,5 @@
 joy_manager:
-  topic: /cmd_vel_teleop
+  topic: /cmd_vel_dev
   type: Twist
   publish_multiple_halt: false
   throttle:
