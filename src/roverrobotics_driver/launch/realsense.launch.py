@@ -52,7 +52,7 @@ configurable_parameters = [{'name': 'camera_name',                  'default': '
                            {'name': 'angular_velocity_cov',         'default': '0.01', 'description': "''"},
                            {'name': 'linear_accel_cov',             'default': '0.01', 'description': "''"},
                            {'name': 'diagnostics_period',           'default': '0.0', 'description': 'Rate of publishing diagnostics. 0=Disabled'},
-                           {'name': 'publish_tf',                   'default': 'false', 'description': '[bool] enable/disable publishing static & dynamic TF'},
+                           {'name': 'publish_tf',                   'default': 'true', 'description': '[bool] enable/disable publishing static & dynamic TF'},
                            {'name': 'tf_publish_rate',              'default': '0.0', 'description': '[double] rate in Hz for publishing dynamic TF'},
                            {'name': 'pointcloud.enable',            'default': 'false', 'description': ''},
                            {'name': 'pointcloud.stream_filter',     'default': '2', 'description': 'texture stream for pointcloud'},
@@ -102,7 +102,13 @@ def launch_setup(context, params, param_name_suffix=''):
             output=_output,
             arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level' + param_name_suffix)],
             emulate_tty=True,
-            )
+            ),
+        launch_ros.actions.Node(
+            package="variable_autonomy",  # Replace with your package name
+            executable="realsense_imu_filter",  # Name from setup.py entry point
+            name="realsense_imu_filter",  # Node name
+            output="screen",  # Output logs to screen
+        )
     ]
 
 def generate_launch_description():

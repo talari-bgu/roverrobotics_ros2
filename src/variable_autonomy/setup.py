@@ -21,6 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             'command_controller = variable_autonomy.command_controller:main',
+            'realsense_imu_filter = variable_autonomy.realsense_imu_filter:main',
+            'experiment_manager = variable_autonomy.experiment_manager:main',
         ],
     },
 )

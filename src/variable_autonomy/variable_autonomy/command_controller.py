@@ -1,35 +1,39 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Int32
-from std_srvs.srv import SetBool
-from std_srvs.srv import Trigger
-from custom_srv.srv import SetString, SetMode
-import threading
+from std_srvs.srv import Trigger, SetBool
+from robot_srv.srv import SetString, SetMode
+
 
 class CommandController(Node):
-    def __init__(self):
+    def __init__(self, initial_loa, initial_control_mode, initial_developer_lock):
         super().__init__("command_controller")
 
+        # Muxer and Smoother
         self.dev_sub = self.create_subscription(Twist, "cmd_vel_dev", self.dev_callback, 1)
         self.teleop_sub = self.create_subscription(Twist, "cmd_vel_teleop", self.teleop_callback, 1)
+        self.teleop_sub = self.create_subscription(Twist, "cmd_vel_nav2", self.nav2_callback, 5)
 
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 1)
         self.cmd_vel_feedback_sub = self.create_subscription(Twist, "cmd_vel", self.cmd_vel_feedback_callback, 1)
 
-        # ps4 joystick
-        self.mode_dev_service = self.create_service(SetMode, "set_mode", self.set_mode_callback)
+        # Services
+        self.loa_service = self.create_service(SetMode, "set_loa", self.set_loa_callback)
         self.lock_service = self.create_service(Trigger, "set_lock", self.set_lock_callback)
-        
-        self.set_ui_service = self._connect_service(SetString, '/set_ui', self.call_ui_service)
+        self.control_mode_service = self.create_service(SetBool, "set_control_mode", self.set_control_mode_callback)
 
-        # 0 - operator, 1 - dev
-        self.current_mode = 1
-        self.is_locked = False
+        # UI service
+        self.set_ui_service = self._connect_service(SetString, '/set_ui')
+
+        # Initializing paramaters
+        self.automation_level = initial_loa
+        self.developer_lock = initial_developer_lock
+        self.control_mode = initial_control_mode
 
         # Store last received commands
         self.last_op_cmd = Twist()
         self.last_dev_cmd = Twist()
+        self.last_nav2_cmd = Twist()
 
         self.current_vel = Twist()
         self.linear_acc_limit = 0.5  # Maximum change in linear velocity per second
@@ -52,7 +56,6 @@ class CommandController(Node):
         request.data = data
 
         future = self.set_ui_service.call_async(request)
-        # rclpy.spin_until_future_complete(self, future)
 
         if future.result() is not None:
             self.get_logger().info(f"Service response: {future.result().message}")
@@ -64,6 +67,9 @@ class CommandController(Node):
 
     def dev_callback(self, msg: Twist):
         self.last_dev_cmd = msg
+
+    def nav2_callback(self, msg: Twist):
+        self.last_nav2_cmd = msg
 
     def cmd_vel_feedback_callback(self, msg: Twist):
         """Feedback callback for actual cmd_vel."""
@@ -94,7 +100,14 @@ class CommandController(Node):
         return smoothed_vel
     
     def publish_cmd_vel(self):
-        target_vel = self.last_op_cmd if self.current_mode == 0 else self.last_dev_cmd
+
+        if self.developer_lock and self.last_dev_cmd:
+            # Developer Joystick has priority
+            target_vel = self.last_dev_cmd
+        elif self.automation_level == 'low':
+            target_vel = self.last_op_cmd
+        elif self.automation_level == 'high':
+            target_vel = self.last_nav2_cmd
 
         # Smooth the velocity using feedback
         dt = 1.0 / self.publish_rate
@@ -103,34 +116,47 @@ class CommandController(Node):
         # Publish the smoothed velocity
         self.cmd_vel_pub.publish(smoothed_vel)
     
-    def set_mode_callback(self, request, response):
-
-        if request.origin == 'op' and self.is_locked:
-            response.message = "Operator tried to switch but locked."
-            response.success = True
-            self.get_logger().info(response.message)
-            return response
+    def set_loa_callback(self, request, response):
 
         # Dev
-        if request.data == 'low' and self.current_mode != 0:
-            self.current_mode = 0  # Manual mode
-            response.message = "Dev changed to low."
-            # self._call_service(self.set_mode_ui_service, True)
-        elif request.data == 'high' and self.current_mode != 1:
-            self.current_mode = 1  # Autonomous navigation mode
-            response.message = "Dev changed to high."
-            # self._call_service(self.set_mode_ui_service, False)
+        if request.origin == "dev":
+            if request.data == "low" and self.automation_level != 'low':
+                self.automation_level = 'low'  # Manual mode
+                response.message = "Dev changed to low."
+                # self.call_ui_service('low')
+            elif request.data == "high" and self.automation_level != 'high':
+                self.automation_level = 'high'  # Autonomous navigation mode
+                response.message = "Dev changed to high."
+                # self.call_ui_service('high')
 
         # Operator
-        elif request.data == 'switch':
-            if self.current_mode == 0:
-                self.current_mode = 1  # Autonomous navigation mode
-                response.message = "Operator changed to high."
-                # self._call_service(self.set_mode_ui_service, False)
-            elif self.current_mode == 1:
-                self.current_mode = 0  # Manual mode
-                response.message = "Operator changed to low."
-                # self._call_service(self.set_mode_ui_service, True)
+        elif request.origin == "operator" and self.control_mode == 'HI':
+            if self.developer_lock:
+                response.message = "Operator tried to switch but locked."
+                response.success = True
+                self.get_logger().info(response.message)
+                return response
+            elif request.data == "switch":
+                if self.automation_level == 'low':
+                    self.automation_level = 'high'
+                    response.message = "Operator changed to high."
+                    self.call_ui_service('high')
+                elif self.automation_level == 'high':
+                    self.automation_level = 'low'
+                    response.message = "Operator changed to low."
+                    self.call_ui_service('low')
+        # Robot
+        elif request.origin == "robot" and self.control_mode == 'RI':
+            if request.data == "low" and self.automation_level != 'low':
+                self.automation_level = 'low'
+                response.message = "robot changed to low."
+                self.call_ui_service('low')
+            elif request.data == "high" and self.automation_level != 'high':
+                self.automation_level = 'high'
+                response.message = "robot changed to high."
+                self.call_ui_service('high')
+        else:
+            response.message = "set_loa empty."
 
         response.success = True
         self.get_logger().info(response.message)
@@ -138,12 +164,26 @@ class CommandController(Node):
 
     def set_lock_callback(self, request, response):
 
-        if self.is_locked:
-            self.is_locked = False  # Only dev can change
+        if self.developer_lock:
+            self.developer_lock = False  # Only dev can change
             response.message = "Set lock false"
         else:
-            self.is_locked = True  # Both op and dev can change
+            self.developer_lock = True  # Both op and dev can change
             response.message = "Set lock true"
+
+        response.success = True
+        self.get_logger().info(response.message)
+        return response
+
+    def set_control_mode_callback(self, request, response):
+        if request.data:
+            # HI
+            self.control_mode = 'HI'
+            response.message = "Set switch control mode to HI"
+        else:
+            # RI
+            self.control_mode = 'RI'
+            response.message = "Set switch control mode to RI"
 
         response.success = True
         self.get_logger().info(response.message)
@@ -152,7 +192,7 @@ class CommandController(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = CommandController()
+    node = CommandController('low', 'HI', False)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

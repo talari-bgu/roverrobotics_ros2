@@ -13,7 +13,7 @@ rplidar:
 # BNO055 IMU Settings
 bno055:
   ros__parameters:
-    active: true
+    active: false
     ros_topic_prefix: ""
     connection_type: "uart"
     uart_port: "/dev/bno055"

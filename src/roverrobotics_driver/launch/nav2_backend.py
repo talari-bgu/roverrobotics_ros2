@@ -40,7 +40,6 @@ def generate_launch_description():
     log_level = LaunchConfiguration('log_level')
     remappings = LaunchConfiguration('remappings')
 
-
     lifecycle_nodes = ['controller_server',
                        'smoother_server',
                        'planner_server',
@@ -55,11 +54,11 @@ def generate_launch_description():
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
 
-    remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]    
     # remappings = [('/tf', 'tf'),
-    #               ('/tf_static', 'tf_static'),
-    #               ('/cmd_vel', '/cmd_vel_nav2')]
+    #               ('/tf_static', 'tf_static')]    
+    remappings = [('/tf', 'tf'),
+                  ('/tf_static', 'tf_static'),
+                  ('/cmd_vel', '/cmd_vel_nav2')]
 
 
     # Create our own temporary YAML files that include substitutions

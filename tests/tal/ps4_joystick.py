@@ -5,6 +5,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_srvs.srv import SetBool, Trigger
+from robot_srv.srv import SetMode, SetString
 
 class JoystickHandler(Node):
     def __init__(self):
@@ -17,8 +18,13 @@ class JoystickHandler(Node):
         # ROS publisher for cmd_vel
         self.publisher = self.create_publisher(Twist, "cmd_vel_dev", 1)
         
-        self.set_mode_client = self._connect_service(SetBool, "set_mode_dev")
+        self.set_mode_client = self._connect_service(SetMode, "set_loa")
         self.set_lock_client = self._connect_service(Trigger, "set_lock")
+        self.set_ui_client = self._connect_service(SetString, "set_ui")
+
+        self.start_experiment_client = self._connect_service(Trigger, "run_experiment")
+        self.next_goal_client = self._connect_service(Trigger, "next_goal")
+        self.previous_goal_client = self._connect_service(Trigger, "previous_goal")
 
 
 
@@ -69,10 +75,16 @@ class JoystickHandler(Node):
             buttons = [self.joystick.get_button(i) for i in range(self.joystick.get_numbuttons())]
 
             # Arrow buttons
-            # hats = [self.joystick.get_hat(i) for i in range(self.joystick.get_numhats())]
+            # tuple (x, y)
+            # right: x = 1
+            # left: x = -1
+            # up: y = 1
+            # down: y = -1
+            hats = [self.joystick.get_hat(i) for i in range(self.joystick.get_numhats())]
 
-            self.state = {"axes": axes, "buttons": buttons}
-            # print(self.state)
+
+            self.state = {"axes": axes, "buttons": buttons, "hats": hats}
+            # print(self.state["hats"][0][0])
             time.sleep(0.02) # 50 Hz
 
     def _publish_cmd_vel(self):
@@ -94,26 +106,58 @@ class JoystickHandler(Node):
 
     def _monitor_buttons(self):
         """Monitor button 1 and call the set_mode service when pressed."""
-        while self.running:
-            # Check if button [1] is pressed
-            if self.joystick.get_button(4):
+        while self.running and rclpy.ok():
+            buttons = self.state["buttons"]
+            hats = self.state["hats"]
+
+            if buttons[4] == 1:
                 print(f"L1 pressed. Toggling set_mode to low.")
-                self._call_service(self.set_mode_client ,True)
+                self._call_service(self.set_mode_client ,"low")
 
-            elif self.joystick.get_button(6):
+            elif buttons[6] == 1:
                 print(f"L2 pressed. Toggling set_mode to high.")
-                self._call_service(self.set_mode_client ,False)
+                self._call_service(self.set_mode_client ,"high")
 
-            elif self.joystick.get_button(8):
+            elif buttons[8] == 1:
                 print(f"Share pressed. Toggling lock.")
                 self._call_service(self.set_lock_client ,None)
+
+            elif buttons[0] == 1:
+                print(f"X pressed. Toggling set_mode to high.")
+                self.call_ui_service("navigating")
+
+            elif buttons[1] == 1:
+                print(f"O pressed. Toggling set_mode to high.")
+                self.call_ui_service("inspecting")
+
+            elif buttons[2] == 1:
+                print(f"Triangle pressed. Toggling set_mode to high.")
+                self.call_ui_service("help")
+
+            elif buttons[3] == 1:
+                print(f"Square pressed. Toggling set_mode to high.")
+                self.call_ui_service("collision")
+
+            elif buttons[10] == 1:
+                print(f"Square pressed. Toggling set_mode to high.")
+                self._call_service(self.start_experiment_client, None)
+
+            if hats[0][0] == 1:
+                print(f"Right arrow pressed.")
+                self._call_service(self.next_goal_client, None)
+            elif hats[0][0] == -1:
+                print(f"Left arrow pressed.")
+                self._call_service(self.previous_goal_client, None)
+            
+
             time.sleep(0.5)
 
     def _call_service(self, client, data=None):
         if data is None:
             request = Trigger.Request()
         else:
-            request = SetBool.Request()
+            request = SetMode.Request()
+            request.origin = "dev"
             request.data = data
 
         future = client.call_async(request)
@@ -123,6 +167,19 @@ class JoystickHandler(Node):
             self.get_logger().info(f"Service response: {future.result().message}")
         else:
             self.get_logger().error("Failed to call set_mode service.")
+
+    def call_ui_service(self, status):
+        request = SetString.Request()
+        request.data = status
+
+        future = self.set_ui_client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+
+        if future.result() is not None:
+            self.get_logger().info(f"Service response: {future.result().message}")
+        else:
+            self.get_logger().error("Failed to call set ui service.")
+
 
     def run(self):
         joystick_thread = threading.Thread(target=self.get_joystick_state)
