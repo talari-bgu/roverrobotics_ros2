@@ -160,7 +160,11 @@ def generate_launch_description():
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
-                parameters=[configured_params],
+                parameters=[{configured_params},
+                            {'default_nav_to_pose_bt_xml': 
+                             '/opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_w_replanning_only_if_path_becomes_invalid.xml'},
+                             {'default_nav_through_poses_bt_xml':
+                              '/home/rover/roverrobotics_ros2/src/roverrobotics_driver/config/bt_navigator_configs/navigate_through_poses_new.xml'}],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(

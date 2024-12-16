@@ -9,6 +9,9 @@ class CommandController(Node):
     def __init__(self, initial_loa, initial_control_mode, initial_developer_lock):
         super().__init__("command_controller")
 
+        self.connect_to_participant = True
+
+        
         # Muxer and Smoother
         self.dev_sub = self.create_subscription(Twist, "cmd_vel_dev", self.dev_callback, 1)
         self.teleop_sub = self.create_subscription(Twist, "cmd_vel_teleop", self.teleop_callback, 1)
@@ -23,7 +26,8 @@ class CommandController(Node):
         self.control_mode_service = self.create_service(SetBool, "set_control_mode", self.set_control_mode_callback)
 
         # UI service
-        self.set_ui_service = self._connect_service(SetString, '/set_ui')
+        if self.connect_to_participant:
+            self.set_ui_service = self._connect_service(SetString, '/set_ui')
 
         # Initializing paramaters
         self.automation_level = initial_loa
@@ -56,11 +60,20 @@ class CommandController(Node):
         request.data = data
 
         future = self.set_ui_service.call_async(request)
+        future.add_done_callback(self.handle_response)
 
-        if future.result() is not None:
-            self.get_logger().info(f"Service response: {future.result().message}")
-        else:
-            self.get_logger().error("Failed to call ui service.")
+    def handle_response(self, future):
+        try:
+            # Retrieve the result from the future
+            response = future.result()
+            if response.success:
+                self.get_logger().info("Service call succeeded: " + response.message)
+            else:
+                self.get_logger().error("Service call failed: " + response.message)
+        except Exception as e:
+            # Handle any exceptions raised during the service call
+            self.get_logger().error(f"Service call resulted in an error: {e}")
+
 
     def teleop_callback(self, msg: Twist):
         self.last_op_cmd = msg

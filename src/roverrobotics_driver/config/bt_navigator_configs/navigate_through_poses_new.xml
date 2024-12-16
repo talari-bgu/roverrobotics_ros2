@@ -1,0 +1,11 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence name="NavigateWithoutReplanning">
+      <ReactiveSequence>
+        <RemovePassedGoals input_goals="{goals}" output_goals="{goals}" radius="0.7"/>
+        <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="GridBased"/>
+      </ReactiveSequence>
+      <FollowPath path="{path}" controller_id="FollowPath"/>
+    </Sequence>
+  </BehaviorTree>
+</root>

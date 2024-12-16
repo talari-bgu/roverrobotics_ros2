@@ -45,4 +45,10 @@ def generate_launch_description():
             name="command_controller",  # Node name
             output="screen",  # Output logs to screen
         ),
+        Node(
+            package="variable_autonomy",  # Replace with your package name
+            executable="ps4_joystick",  # Name from setup.py entry point
+            name="ps4_joystick",  # Node name
+            output="screen",  # Output logs to screen
+        ),
     ])

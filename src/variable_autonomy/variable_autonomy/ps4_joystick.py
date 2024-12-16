@@ -11,6 +11,8 @@ class JoystickHandler(Node):
     def __init__(self):
         super().__init__("joystick_dev")
         
+        self.connect_to_participant = True
+
         self.linear_scale = 0.5
         self.angular_scale = 0.8
         self.deadzone = 0.1
@@ -20,7 +22,8 @@ class JoystickHandler(Node):
         
         self.set_mode_client = self._connect_service(SetMode, "set_loa")
         self.set_lock_client = self._connect_service(Trigger, "set_lock")
-        self.set_ui_client = self._connect_service(SetString, "set_ui")
+        if self.connect_to_participant:
+            self.set_ui_client = self._connect_service(SetString, "set_ui")
 
         self.start_experiment_client = self._connect_service(Trigger, "run_experiment")
         self.next_goal_client = self._connect_service(Trigger, "next_goal")
@@ -161,25 +164,26 @@ class JoystickHandler(Node):
             request.data = data
 
         future = client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
-
-        if future.result() is not None:
-            self.get_logger().info(f"Service response: {future.result().message}")
-        else:
-            self.get_logger().error("Failed to call set_mode service.")
+        future.add_done_callback(self.handle_response)
 
     def call_ui_service(self, status):
         request = SetString.Request()
         request.data = status
 
         future = self.set_ui_client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
+        future.add_done_callback(self.handle_response)
 
-        if future.result() is not None:
-            self.get_logger().info(f"Service response: {future.result().message}")
-        else:
-            self.get_logger().error("Failed to call set ui service.")
-
+    def handle_response(self, future):
+        try:
+            # Retrieve the result from the future
+            response = future.result()
+            if response.success:
+                self.get_logger().info("Service call succeeded: " + response.message)
+            else:
+                self.get_logger().error("Service call failed: " + response.message)
+        except Exception as e:
+            # Handle any exceptions raised during the service call
+            self.get_logger().error(f"Service call resulted in an error: {e}")
 
     def run(self):
         joystick_thread = threading.Thread(target=self.get_joystick_state)
@@ -210,14 +214,11 @@ class JoystickHandler(Node):
         rclpy.shutdown()
         print("Joystick handler closed.")
 
+def main(args=None):
+    rclpy.init(args=args)
+    node = JoystickHandler()
+    node.run()
+    
+
 if __name__ == "__main__":
-    try:
-        # Initialize ROS 2
-        rclpy.init()
-
-        joystick_handler = JoystickHandler()
-
-        # Run the joystick handler
-        joystick_handler.run()
-    except RuntimeError as e:
-        print(e)
+    main()
