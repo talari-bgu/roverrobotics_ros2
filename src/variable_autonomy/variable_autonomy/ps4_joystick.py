@@ -21,7 +21,7 @@ class JoystickHandler(Node):
         self.publisher = self.create_publisher(Twist, "cmd_vel_dev", 1)
         
         self.set_mode_client = self._connect_service(SetMode, "set_loa")
-        self.set_lock_client = self._connect_service(Trigger, "set_lock")
+        self.set_lock_client = self._connect_service(Trigger, "set_lock_trigger")
         if self.connect_to_participant:
             self.set_ui_client = self._connect_service(SetString, "set_ui")
 

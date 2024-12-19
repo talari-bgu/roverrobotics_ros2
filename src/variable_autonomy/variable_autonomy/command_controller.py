@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 from std_srvs.srv import Trigger, SetBool
 from robot_srv.srv import SetString, SetMode
 
@@ -18,11 +19,13 @@ class CommandController(Node):
         self.teleop_sub = self.create_subscription(Twist, "cmd_vel_nav2", self.nav2_callback, 5)
 
         self.cmd_vel_pub = self.create_publisher(Twist, "cmd_vel", 1)
+        self.loa_pub = self.create_publisher(String, "current_loa", 1)
         self.cmd_vel_feedback_sub = self.create_subscription(Twist, "cmd_vel", self.cmd_vel_feedback_callback, 1)
 
         # Services
         self.loa_service = self.create_service(SetMode, "set_loa", self.set_loa_callback)
-        self.lock_service = self.create_service(Trigger, "set_lock", self.set_lock_callback)
+        self.lock_trigger_service = self.create_service(Trigger, "set_lock_trigger", self.set_lock_trigger_callback)
+        self.lock_bool_service = self.create_service(SetBool, "set_lock_bool", self.set_lock_bool_callback)
         self.control_mode_service = self.create_service(SetBool, "set_control_mode", self.set_control_mode_callback)
 
         # UI service
@@ -45,7 +48,8 @@ class CommandController(Node):
         self.angular_acc_limit = 2.0  # Maximum change in angular velocity per second
         self.publish_rate = 50.0  # Hz
 
-        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_cmd_vel)
+        self.cmd_timer = self.create_timer(1.0 / self.publish_rate, self.publish_cmd_vel)
+        self.loa_timer = self.create_timer(0.33, self.publish_loa)
     
     def _connect_service(self, srv_type, srv_name, timeout=1.0):
         client = self.create_client(srv_type, srv_name)
@@ -129,6 +133,11 @@ class CommandController(Node):
         # Publish the smoothed velocity
         self.cmd_vel_pub.publish(smoothed_vel)
     
+    def publish_loa(self):
+        msg = String()
+        msg.data = self.automation_level
+        self.loa_pub.publish(msg)
+
     def set_loa_callback(self, request, response):
 
         # Dev
@@ -175,8 +184,7 @@ class CommandController(Node):
         self.get_logger().info(response.message)
         return response
 
-    def set_lock_callback(self, request, response):
-
+    def set_lock_trigger_callback(self, request, response):
         if self.developer_lock:
             self.developer_lock = False  # Only dev can change
             response.message = "Set lock false"
@@ -184,6 +192,18 @@ class CommandController(Node):
             self.developer_lock = True  # Both op and dev can change
             response.message = "Set lock true"
 
+        response.success = True
+        self.get_logger().info(response.message)
+        return response
+    
+    def set_lock_bool_callback(self, request, response):
+        if request.data:
+            response.message = "Set lock true"
+        else:
+            response.message = "Set lock false"
+        
+        self.developer_lock = request.data
+        
         response.success = True
         self.get_logger().info(response.message)
         return response

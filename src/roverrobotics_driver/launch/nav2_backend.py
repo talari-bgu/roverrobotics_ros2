@@ -40,12 +40,18 @@ def generate_launch_description():
     log_level = LaunchConfiguration('log_level')
     remappings = LaunchConfiguration('remappings')
 
+    # lifecycle_nodes = ['controller_server',
+    #                    'smoother_server',
+    #                    'planner_server',
+    #                    'behavior_server',
+    #                    'bt_navigator',
+    #                    'waypoint_follower',]
+    
     lifecycle_nodes = ['controller_server',
-                       'smoother_server',
-                       'planner_server',
-                       'behavior_server',
-                       'bt_navigator',
-                       'waypoint_follower',]
+                        'smoother_server',
+                        'planner_server',
+                        'bt_navigator',
+                        'waypoint_follower',]
 
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
     # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
@@ -163,8 +169,11 @@ def generate_launch_description():
                 parameters=[{configured_params},
                             {'default_nav_to_pose_bt_xml': 
                              '/opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_w_replanning_only_if_path_becomes_invalid.xml'},
+                            #  {'default_nav_through_poses_bt_xml':
+                            #   '/home/rover/roverrobotics_ros2/src/roverrobotics_driver/config/bt_navigator_configs/navigate_through_poses_new.xml'}
                              {'default_nav_through_poses_bt_xml':
-                              '/home/rover/roverrobotics_ros2/src/roverrobotics_driver/config/bt_navigator_configs/navigate_through_poses_new.xml'}],
+                              '/home/rover/roverrobotics_ros2/src/roverrobotics_driver/config/bt_navigator_configs/navigate_through_poses_replanning.xml'}
+                              ],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(

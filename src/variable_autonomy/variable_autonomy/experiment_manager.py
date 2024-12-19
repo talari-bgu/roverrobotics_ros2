@@ -1,18 +1,24 @@
+# ROS 2 core modules
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist
-from std_srvs.srv import SetBool
-from std_srvs.srv import Trigger
-from robot_srv.srv import SetString, SetMode
-from sensor_msgs.msg import LaserScan
-import threading
-from geometry_msgs.msg import PoseStamped
-from nav2_msgs.action import NavigateToPose
 from rclpy.action import ActionClient
-from tf2_ros import Buffer, TransformListener
-from lifecycle_msgs.srv import ChangeState
+
+# Standard ROS 2 message and service types
+from std_msgs.msg import String
+from std_srvs.srv import SetBool, Trigger
+from sensor_msgs.msg import LaserScan
+from geometry_msgs.msg import Twist, PoseStamped
+from nav2_msgs.action import NavigateThroughPoses
 from action_msgs.msg import GoalStatus
-from lifecycle_msgs.msg import Transition
+
+# Custom message and service types
+from robot_srv.srv import SetString, SetMode
+
+# ROS 2 Transform modules
+from tf2_ros import Buffer, TransformListener
+
+# Standard Python modules
+import threading
 import time
 from datetime import datetime
 import json
@@ -34,6 +40,7 @@ class ExperimentManager(Node):
         self.enable_recording = False  # Enable recording
         self.observation_rate = 1.0  # 1 Hz observation rate
         self.save_rate = 5  # Save every 30 seconds
+        self.started = False
 
         # Experiment record instance
         if self.enable_recording:
@@ -55,12 +62,14 @@ class ExperimentManager(Node):
         # Sub
         self.cmd_vel_sub = self.create_subscription(Twist, "/cmd_vel", self.cmd_vel_callback, 1)
         self.scan_sub = self.create_subscription(LaserScan, "/scan", self.scan_callback, 1)
+        self.loa_sub = self.create_subscription(String, "/current_loa", self.loa_callback, 1)
         
         # Robots state
         self.current_position = None
         self.current_orientation = None
         self.current_cmd_vel = None
         self.current_scan = None
+        self.current_loa = None
 
         # Services - Creation
         self.run_experiment_service = self.create_service(Trigger, "run_experiment", self.run_experiment_callback)
@@ -69,19 +78,17 @@ class ExperimentManager(Node):
 
         # Services - Connection
         self.set_ui_client = self._connect_service(SetString, "set_ui")
+        self.set_sa_client = self._connect_service(Trigger, "set_sa")
         self.set_loa_client = self._connect_service(SetMode, "set_loa")
+        self.set_lock_client = self._connect_service(SetBool, "set_lock_bool")
         self.set_control_mode_client = self._connect_service(SetBool, "set_control_mode")
 
-        self.controller_state_client = self._connect_service(ChangeState, '/controller_server/change_state')
-        self.planner_state_client = self._connect_service(ChangeState, '/planner_server/change_state')
-        self.bt_nav_state_client = self._connect_service(ChangeState, '/bt_navigator/change_state')
-        self.life_cycle_nodes = [self.controller_state_client, self.planner_state_client, self.bt_nav_state_client]
 
         # Nav2 Action
-        self.navigate_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+        self.navigate_client = ActionClient(self, NavigateThroughPoses, 'navigate_through_poses')
         while not self.navigate_client.wait_for_server(timeout_sec=5.0):
-            self.get_logger().info('Waiting for NavigateToPose action server...')
-        self.get_logger().info('Connected to NavigateToPose action server...')
+            self.get_logger().info('Waiting for NavigateThroughPoses action server...')
+        self.get_logger().info('Connected to NavigateThroughPoses action server...')
         
         
         self.get_logger().info("ExperimentManager is ready.")
@@ -90,13 +97,28 @@ class ExperimentManager(Node):
     # Run method
     def run_experiment_callback(self, request, response):
         
+        if self.started:
+            response.success = False
+            response.message = "Started already."
+            return response
+        
+        self.started = True
         self.goals_reached = []
 
         # Starting parameters
         if self.switch_mode == 'RI':
+            self.call_ui_service('navigating')
+            time.sleep(0.2)
             self.call_switch_mode_service(False)
             time.sleep(0.2)
             self.call_loa_switch_service('high')
+
+        elif self.switch_mode == 'HI':
+            self.call_ui_service('ready')
+            time.sleep(0.2)
+            self.call_switch_mode_service(True)
+            time.sleep(0.2)
+            self.call_loa_switch_service('low')
 
         if self.enable_recording:
             self.record_timer = self.create_timer(1.0 / self.observation_rate, self.record_observation)
@@ -110,9 +132,9 @@ class ExperimentManager(Node):
         # Send the first goal
         first_goal = self.goal_manager.get_current_goal()
         if first_goal:
-            name, (x, y, yaw) = first_goal
-            self.get_logger().info(f"Sending first goal: {name} at (x={x}, y={y}, yaw={yaw})")
-            self.send_goal(x, y, yaw)
+            name, waypoints = first_goal
+            self.get_logger().info(f"Sending first goal: {name}")
+            self.send_goal(waypoints)
             response.success = True
             response.message = f"Experiment started with first goal: {name}"
         else:
@@ -128,76 +150,97 @@ class ExperimentManager(Node):
     def handle_trigger_event(self, trigger):
         # Handle the event based on the trigger name or type
         self.get_logger().info(f"Handling triger: {trigger.name}")
-        if trigger.name == 'SA1':
-            pass
+        if trigger.name in ['SA1', 'SA2', 'SA3', 'SA4']:
+            if trigger.name == 'SA4':
+                self.trigger_manager.running = False
+            self.call_lock_service(True)
+            time.sleep(0.2)
+            self.call_sa_service()
 
-        elif trigger.name == 'O1_start':
+        elif trigger.name in ['O1_start', 'O2_start', 'O3_start', 'O4_start',]:
             if self.switch_mode == "RI":
             # lower loa and ui
                 self.call_loa_switch_service('low')
                 time.sleep(0.2)
                 self.call_ui_service('help')
-        elif trigger.name == 'O1_end':
-            if self.switch_mode == "RI":
-            # increase loa and ui
-                self.call_loa_switch_service('high')
-                time.sleep(0.2)
-                self.call_ui_service('navigating')
-                next_goal = self.goal_manager.return_next_goal()
-                if next_goal:
-                    name, (x, y, yaw) = next_goal
-                    self.send_goal(x, y, yaw)
+            else:
+                self.call_ui_service('collision')
 
-        elif trigger.name == 'O2_start':
-            if self.switch_mode == "RI":
-            # lower loa and ui
-                self.call_loa_switch_service('low')
-                time.sleep(0.2)
-                self.call_ui_service('help')
-        elif trigger.name == 'O2_end':
+        elif trigger.name in ['O1_end', 'O2_end', 'O3_end', 'O4_end']:
             if self.switch_mode == "RI":
             # increase loa and ui
                 self.call_loa_switch_service('high')
                 time.sleep(0.2)
                 self.call_ui_service('navigating')
-                next_goal = self.goal_manager.return_next_goal()
-                if next_goal:
-                    name, (x, y, yaw) = next_goal
-                    self.send_goal(x, y, yaw)
+            else:
+                self.call_ui_service('ready')
+            next_goal = self.goal_manager.return_next_goal()
+            if next_goal:
+                name, waypoints = next_goal
+                self.send_goal(waypoints)
 
-        elif trigger.name == 'O3_start':
-            if self.switch_mode == "RI":
-            # lower loa and ui
-                self.call_loa_switch_service('low')
-                time.sleep(0.2)
-                self.call_ui_service('help')
-        elif trigger.name == 'O3_end':
-            if self.switch_mode == "RI":
-            # increase loa and ui
-                self.call_loa_switch_service('high')
-                time.sleep(0.2)
-                self.call_ui_service('navigating')
-                next_goal = self.goal_manager.return_next_goal()
-                if next_goal:
-                    name, (x, y, yaw) = next_goal
-                    self.send_goal(x, y, yaw)
+        # elif trigger.name == 'O2_start':
+        #     if self.switch_mode == "RI":
+        #     # lower loa and ui
+        #         self.call_loa_switch_service('low')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('help')
+        #     else:
+        #         self.call_ui_service('collision')
+        # elif trigger.name == 'O2_end':
+        #     if self.switch_mode == "RI":
+        #     # increase loa and ui
+        #         self.call_loa_switch_service('high')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('navigating')
+        #     else:
+        #         self.call_ui_service('ready')
+        #     next_goal = self.goal_manager.return_next_goal()
+        #     if next_goal:
+        #         name, waypoints = next_goal
+        #         self.send_goal(waypoints)
 
-        elif trigger.name == 'O4_start':
-            if self.switch_mode == "RI":
-            # lower loa and ui
-                self.call_loa_switch_service('low')
-                time.sleep(0.2)
-                self.call_ui_service('help')
-        elif trigger.name == 'O4_end':
-            if self.switch_mode == "RI":
-            # increase loa and ui
-                self.call_loa_switch_service('high')
-                time.sleep(0.2)
-                self.call_ui_service('navigating')
-                next_goal = self.goal_manager.return_next_goal()
-                if next_goal:
-                    name, (x, y, yaw) = next_goal
-                    self.send_goal(x, y, yaw)
+        # elif trigger.name == 'O3_start':
+        #     if self.switch_mode == "RI":
+        #     # lower loa and ui
+        #         self.call_loa_switch_service('low')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('help')
+        #     else:
+        #         self.call_ui_service('collision')
+        # elif trigger.name == 'O3_end':
+        #     if self.switch_mode == "RI":
+        #     # increase loa and ui
+        #         self.call_loa_switch_service('high')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('navigating')
+        #     else:
+        #         self.call_ui_service('ready')
+        #     next_goal = self.goal_manager.return_next_goal()
+        #     if next_goal:
+        #         name, waypoints = next_goal
+        #         self.send_goal(waypoints)
+
+        # elif trigger.name == 'O4_start':
+        #     if self.switch_mode == "RI":
+        #     # lower loa and ui
+        #         self.call_loa_switch_service('low')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('help')
+        #     else:
+        #         self.call_ui_service('collision')
+        # elif trigger.name == 'O4_end':
+        #     if self.switch_mode == "RI":
+        #     # increase loa and ui
+        #         self.call_loa_switch_service('high')
+        #         time.sleep(0.2)
+        #         self.call_ui_service('navigating')
+        #     else:
+        #         self.call_ui_service('ready')
+        #     next_goal = self.goal_manager.return_next_goal()
+        #     if next_goal:
+        #         name, waypoints = next_goal
+        #         self.send_goal(waypoints)
     
     ######################################################################
     # Utils
@@ -232,6 +275,8 @@ class ExperimentManager(Node):
 
             time.sleep(self.position_update_rate)  # Adjust the polling frequency
     
+    def loa_callback(self, msg):
+        self.current_loa = msg.data
 
     def _connect_service(self, srv_type, srv_name, timeout=1.0):
 
@@ -257,11 +302,24 @@ class ExperimentManager(Node):
         future = self.set_loa_client.call_async(request)
         future.add_done_callback(self.handle_response)
 
+    def call_lock_service(self, lock):
+        request = SetBool.Request()
+        request.data = lock
+
+        future = self.set_lock_client.call_async(request)
+        future.add_done_callback(self.handle_response)
+
     def call_ui_service(self, status):
         request = SetString.Request()
         request.data = status
 
         future = self.set_ui_client.call_async(request)
+        future.add_done_callback(self.handle_response)
+
+    def call_sa_service(self):
+        request = Trigger.Request()
+
+        future = self.set_sa_client.call_async(request)
         future.add_done_callback(self.handle_response)
     
     def handle_response(self, future):
@@ -282,8 +340,8 @@ class ExperimentManager(Node):
 
         next_goal = self.goal_manager.return_next_goal()
         if next_goal:
-            name, (x, y, yaw) = next_goal
-            self.send_goal(x, y, yaw)
+            name, waypoints = next_goal
+            self.send_goal(waypoints)
             response.success = True
             response.message = f"Moved to next goal: {name}"
         else:
@@ -299,8 +357,8 @@ class ExperimentManager(Node):
 
         previous_goal = self.goal_manager.return_previous_goal()
         if previous_goal:
-            name, (x, y, yaw) = previous_goal
-            self.send_goal(x, y, yaw)
+            name, waypoints = previous_goal
+            self.send_goal(waypoints)
             response.success = True
             response.message = f"Moved to previous goal: {name}"
         else:
@@ -312,22 +370,34 @@ class ExperimentManager(Node):
     
     ######################################################################
     # Nav2
-    def send_goal(self, x, y, yaw):
-        goal_msg = NavigateToPose.Goal()
-        
-        # Set target pose
-        goal_msg.pose = PoseStamped()
-        goal_msg.pose.header.frame_id = 'map'
-        goal_msg.pose.header.stamp = self.get_clock().now().to_msg()
-        goal_msg.pose.pose.position.x = x
-        goal_msg.pose.pose.position.y = y
-        goal_msg.pose.pose.orientation.z = math.sin(yaw / 2.0)
-        goal_msg.pose.pose.orientation.w = math.cos(yaw / 2.0)
+    def send_goal(self, waypoints):
+        goal_msg = NavigateThroughPoses.Goal()
+        goal_msg.poses = []  # Initialize the list of poses
 
-        self.get_logger().info(f'Sending goal: x={x}, y={y}, yaw={yaw}')
-        
+        # Build a list of PoseStamped messages for each waypoint
+        for x, y, yaw in waypoints:
+            pose = PoseStamped()
+            pose.header.frame_id = 'map'
+            pose.header.stamp = self.get_clock().now().to_msg()
+            pose.pose.position.x = x
+            pose.pose.position.y = y
+            pose.pose.orientation.z = math.sin(yaw / 2.0)
+            pose.pose.orientation.w = math.cos(yaw / 2.0)
+            goal_msg.poses.append(pose)
+
+        # self.get_logger().info(f"Sending goal with {len(waypoints)} waypoints.")
+        goal_msg.behavior_tree = ''
+
+        # Send the goal
+        # self._send_goal_future = self.navigate_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
         self._send_goal_future = self.navigate_client.send_goal_async(goal_msg)
         self._send_goal_future.add_done_callback(self.goal_response_callback)
+    
+
+    def feedback_callback(self, feedback_msg):
+        # Callback for receiving feedback during navigation
+        feedback = feedback_msg.feedback
+        self.get_logger().info(f'Feedback: {feedback}')
 
     def goal_response_callback(self, future):
         goal_handle = future.result()
@@ -341,9 +411,7 @@ class ExperimentManager(Node):
 
     def get_result_callback(self, future):
         result = future.result().result
-        status = future.result().status
         if result:
-            print(status)
             current_goal = self.goal_manager.get_current_goal()
             if current_goal:
                 goal_name, _ = current_goal
@@ -362,7 +430,7 @@ class ExperimentManager(Node):
 
     def record_observation(self):
         if self.enable_recording and self.experiment_record:
-            self.experiment_record.record(self.current_position, self.current_orientation ,self.current_cmd_vel, self.current_scan)
+            self.experiment_record.record(self.current_loa, self.current_position, self.current_orientation ,self.current_cmd_vel, self.current_scan)
 
     def destroy(self):
         # Stop recording gracefully
@@ -393,20 +461,20 @@ class GoalManager:
         # SA4: (6.90, 5.98)
 
         self.goals = [
-            ('I1', (7.65, -7.0, -1.57)),
+            ('I1', [(7.0, -5.5, -1,57),(7.65, -7.0, -1.57)]),
             # ('SA1', (7.47, -1.37, 1.57)),
-            ('O1', (7.46, 0.32, 1.57)),
-            ('O2', (4.59, 16.10, 2.9)),
+            ('O1', [(7.6, 0.32, 1.57)]),
+            ('O2', [(6.9, 16.0, 1.57), (4.59, 16.10, 2.9)]),
             # ('SA2', (0.96, 17.30, 3.14)),
-            ('I2', (-0.43, 17.20, 3.14)),
-            ('I3', (0.08, 21.7, 1.57)),
-            ('I4', (6.95, 15.80, 0.0)),
-            ('O3', (6.86, 20.3, 1.57)),
-            ('I5', (3.61, 26.2, 3.14)),
+            ('I2', [(-0.43, 17.20, 3.14)]),
+            ('I3', [(0.82, 19.6, 1.57), (0.08, 21.7, 1.57)]),
+            ('I4', [(3.2, 20.9, 0.0),(3.2, 17.1, -1.57),(6.95, 15.80, 0.0)]),
+            ('O3', [(6.86, 20.3, 1.57)]),
+            ('I5', [(6.5, 25.4, -1.57),(3.61, 26.2, 3.14)]),
             # ('SA3', (6.30, 22.00, -1.57)),
-            ('O4', (6.43, 13.90, -1.57)),
+            ('O4', [(6.4, 13.90, -1.57)]),
             # ('SA4', (6.90, 5.98, -1.57)),
-            ('end', (0.0, 0.0, 3.14))
+            ('end', [(0.0, 0.0, 3.14)])
         ]
         self.current_index = 0  # Start with the first goal
 
@@ -454,27 +522,20 @@ class TriggerManager:
         # O4 : (6.60, 11.20)
         # SA4: (6.90, 5.98)
 
-        if switch_mode == "HI":
-            self.triggers = [
-                EventTrigger("trigger_1",  (0.0, 0.0)),
-                EventTrigger("trigger_2", (2.0, 0.0)),
-                EventTrigger("trigger_3",  (4.0, 4.0))
-            ]
-        elif switch_mode == "RI":
-            self.triggers = [
-                EventTrigger("SA1", (7.47, -1.37)),
-                EventTrigger("O1_start", (7.46, 0.32)),
-                EventTrigger("O1_end", (7.32, 3.14)),
-                EventTrigger("O2_start", (4.59, 16.10)),
-                EventTrigger("O2_end", (2.08, 16.90)),
-                EventTrigger("SA2", (0.96, 17.30)),
-                EventTrigger("O3_start", (6.86, 20.3)),
-                EventTrigger("O3_end", (6.65, 22.9)),
-                EventTrigger("SA3", (6.30, 22.00)),
-                EventTrigger("O4_start", (6.43, 13.90)),
-                EventTrigger("O4_end", (6.60, 11.20)),
-                EventTrigger("SA4", (6.90, 5.98)),
-            ]
+        self.triggers = [
+            EventTrigger("SA1", (7.32, -1.37 + 0.5), 0.5, 2),
+            EventTrigger("O1_start", (7.46, 0.32 + 0.5), 0.5, 2),
+            EventTrigger("O1_end", (7.32, 3.14 + 0.5),0.5, 2),
+            EventTrigger("O2_start", (4.59 - 0.5, 16.10), 2, 0.5),
+            EventTrigger("O2_end", (2.08 - 0.5, 16.90), 2, 0.5),
+            EventTrigger("SA2", (0.96 - 0.5, 17.30), 2, 0.5),
+            EventTrigger("O3_start", (6.3, 20.3 + 0.5), 0.5, 2),
+            EventTrigger("O3_end", (6.3, 22.9 + 0.5), 0.5, 2),
+            EventTrigger("SA3", (6.30, 22.00 - 0.5), 0.5 , 2),
+            EventTrigger("O4_start", (6.64, 13.90 - 0.5), 0.5, 2),
+            EventTrigger("O4_end", (6.70, 11.20 - 0.5), 0.5, 2),
+            EventTrigger("SA4", (6.90, 5.98 - 0.5), 0.5, 2),
+        ]
 
         self.current_index = 0 if self.triggers else -1
         
@@ -513,15 +574,35 @@ class TriggerManager:
             self.on_trigger_callback(trigger)  # Notify the ExperimentManager
     
 
-class EventTrigger():
-    def __init__(self, name, point=None, precision = 0.5):
-
+class EventTrigger:
+    def __init__(self, name, point=None, width=1.0, height=1.0):
+        """
+        Initialize an event trigger with a rectangle (axis-aligned).
+        
+        :param name: Name of the trigger.
+        :param point: Center point (x, y) of the rectangle.
+        :param width: Width of the rectangle.
+        :param height: Height of the rectangle.
+        """
         self.name = name
-        self.border = (point[0] - precision, point[1] - precision, point[0] + precision, point[1] + precision)
+        self.center = point
+        self.width = width
+        self.height = height
+
+        # Calculate the rectangle's axis-aligned borders
+        half_width = width / 2
+        half_height = height / 2
+        self.border = (
+            point[0] - half_width,  # x1 (left)
+            point[1] - half_height, # y1 (bottom)
+            point[0] + half_width,  # x2 (right)
+            point[1] + half_height  # y2 (top)
+        )
 
     def is_triggered(self, position):
         """
         Check if the trigger is activated based on the robot's current position.
+
         :param position: Current position (x, y) of the robot.
         :return: True if the trigger is activated, False otherwise.
         """
@@ -532,7 +613,8 @@ class EventTrigger():
         return x1 <= x <= x2 and y1 <= y <= y2
 
     def __repr__(self):
-        return f"EventTrigger(event_type={self.name}, border={self.border})"
+        return (f"EventTrigger(name={self.name}, center={self.center}, width={self.width}, "
+                f"height={self.height}, border={self.border})")
     
 
 class ExperimentRecord:
@@ -558,10 +640,11 @@ class ExperimentRecord:
         self.save_thread = threading.Thread(target=self.save_periodically)
         self.save_thread.start()
 
-    def record(self, position, orientation, cmd_vel, scan):
+    def record(self, loa, position, orientation, cmd_vel, scan):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         observation = {
             "timestamp": timestamp,
+            "loa": loa if loa else None,
             "position": position if position else None,
             "orientation": orientation if orientation else None,
             "cmd_vel":  cmd_vel if cmd_vel else None,

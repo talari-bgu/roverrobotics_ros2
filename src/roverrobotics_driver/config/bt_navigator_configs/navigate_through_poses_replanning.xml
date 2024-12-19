@@ -1,0 +1,19 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <!-- Repeat the main sequence up to 500 times until success -->
+    <RetryUntilSuccessful num_attempts="500">
+      <PipelineSequence name="NavigateWithReplanning">
+        <!-- Replan the path at 0.333 Hz (every 3 seconds) -->
+        <RateController hz="0.333">
+          <ReactiveSequence>
+            <!-- Remove passed goals and compute path -->
+            <RemovePassedGoals input_goals="{goals}" output_goals="{goals}" radius="0.7"/>
+            <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="GridBased"/>
+          </ReactiveSequence>
+        </RateController>
+        <!-- Follow the computed path -->
+        <FollowPath path="{path}" controller_id="FollowPath"/>
+      </PipelineSequence>
+    </RetryUntilSuccessful>
+  </BehaviorTree>
+</root>

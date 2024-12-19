@@ -17,8 +17,8 @@ slam_toolbox:
     # if you'd like to start localizing on bringup in a map and pose
     # map_start_pose: [2.4, 0.0, 0.0] # Docking station in lab -131
     # map_start_pose: [5.4, 25.6, -1.57] # Noa's experiment start
-    map_start_pose: [0.0, 0.0, 0.0] # Starting point in lab -131
-    # map_start_pose: [14.86, -0.1, 0.0] # Roni's experiment start in lab -134
+    #map_start_pose: [0.0, 0.0, 0.0] # Starting point in lab -131
+    map_start_pose: [14.86, -0.1, 0.0] # Roni's experiment start in lab -134
     
 
     
