@@ -24,6 +24,8 @@ setup(
             'realsense_imu_filter = variable_autonomy.realsense_imu_filter:main',
             'experiment_manager = variable_autonomy.experiment_manager:main',
             'ps4_joystick = variable_autonomy.ps4_joystick:main',
+            'camera_feedback = variable_autonomy.camera_feedback:main',
+            'camera_socket = variable_autonomy.camera_socket:main',
         ],
     },
 )

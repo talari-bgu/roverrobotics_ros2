@@ -51,4 +51,16 @@ def generate_launch_description():
             name="ps4_joystick",  # Node name
             output="screen",  # Output logs to screen
         ),
+        # Node(
+        #     package="variable_autonomy",  # Replace with your package name
+        #     executable="camera_socket",  # Name from setup.py entry point
+        #     name="camera_socket",  # Node name
+        #     output="screen",  # Output logs to screen
+        # ),
+                # Node(
+        #     package="variable_autonomy",  # Replace with your package name
+        #     executable="camera_feedback",  # Name from setup.py entry point
+        #     name="camera_feedback",  # Node name
+        #     output="screen",  # Output logs to screen
+        # ),
     ])

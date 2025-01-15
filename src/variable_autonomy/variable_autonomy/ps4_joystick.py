@@ -171,6 +171,7 @@ class JoystickHandler(Node):
         request.data = status
 
         future = self.set_ui_client.call_async(request)
+        # rclpy.spin_until_future_complete(self, future)
         future.add_done_callback(self.handle_response)
 
     def handle_response(self, future):

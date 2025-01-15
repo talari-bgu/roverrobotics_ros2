@@ -7,6 +7,7 @@ from nav2_msgs.action import NavigateThroughPoses
 from rclpy.action import ActionClient
 from rclpy.duration import Duration
 
+
 class NavigateThroughPosesNode(Node):
     def __init__(self):
         super().__init__('navigate_through_poses_node')
@@ -20,7 +21,7 @@ class NavigateThroughPosesNode(Node):
         # Trajectory rotation in degrees
         rotation = 95
 
-        with open("4b.json", "r") as file:
+        with open("1b.json", "r") as file:
             data = json.load(file)
 
         self.waypoints = []
@@ -100,7 +101,7 @@ class NavigateThroughPosesNode(Node):
     def feedback_callback(self, feedback_msg):
         # Callback for receiving feedback during navigation
         feedback = feedback_msg.feedback
-        self.get_logger().info(f'Feedback: {feedback}')
+        # self.get_logger().info(f'Feedback: {feedback}')
 
     def get_result_callback(self, future):
         result = future.result().result
